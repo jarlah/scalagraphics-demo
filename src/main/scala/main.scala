@@ -1,7 +1,3 @@
-import cats.effect.IO
-import cats.data.State
-import my2dgame.GameWindow
-
 import java.awt.event.{ComponentEvent, ComponentListener}
 import java.awt.{Dimension, Graphics, Image}
 import javax.swing.{ImageIcon, JFrame}
@@ -43,7 +39,7 @@ trait Scene {
 }
 
 class WelcomeScene extends Scene {
-  val image: Image = new ImageIcon("assets/welcome.jpeg").getImage
+  private val image: Image = new ImageIcon("assets/welcome.jpeg").getImage
   override def render: GraphicsOp[Unit] = for {
     _ <- drawImage(image, 0, 0)
     _ <- drawString("Welcome to the game!", 100, 100)

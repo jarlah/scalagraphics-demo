@@ -6,5 +6,3 @@ lazy val root = (project in file("."))
   .settings(
     name := "scala2dgame"
   )
-
-libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.0"
