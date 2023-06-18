@@ -18,7 +18,7 @@ trait SceneUtils {
   def height: Int
 }
 
-class SceneManager(keyManager: GameKeyManager, var width: Int, var height: Int) extends KeyListener, ComponentListener, SceneUtils {
+case class SceneManager(keyManager: GameKeyManager, var width: Int, var height: Int) extends KeyListener, ComponentListener, SceneUtils {
 
   private var currentScene: Scene = _
 
@@ -68,9 +68,11 @@ class SceneManager(keyManager: GameKeyManager, var width: Int, var height: Int) 
   override def componentHidden(e: ComponentEvent): Unit = {
     currentScene.onEnter()
   }
+
+  def getCurrentScene: Scene = currentScene
 }
 
-class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
+case class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
   private var image: Image = assetManager.getImage("welcome.jpeg")
   override def render: GraphicsOp[Unit] = for {
     _ <- drawImage(image, 0, 0)
@@ -92,7 +94,7 @@ class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, scene
   override def onExit(): Unit = ()
 }
 
-class GameScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
+case class GameScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
   override def render: GraphicsOp[Unit] = for {
     _ <- clearRect(0, 0, sceneUtils.width, sceneUtils.height)
     _ <- drawString("THIS IS THE GAME", 200, 200)
