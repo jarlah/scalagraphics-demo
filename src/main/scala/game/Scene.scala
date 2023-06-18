@@ -1,5 +1,5 @@
 package game
-import java.awt.event.{KeyAdapter, KeyEvent}
+import java.awt.event.{ComponentEvent, ComponentListener, KeyAdapter, KeyEvent, KeyListener}
 import java.awt.{Dimension, Graphics, Image}
 
 trait Scene {
@@ -12,7 +12,7 @@ trait Scene {
   def onExit(): Unit
 }
 
-class SceneManager(keyManager: GameKeyManager) extends KeyAdapter {
+class SceneManager(keyManager: GameKeyManager) extends KeyListener, ComponentListener {
 
   private var currentScene: Scene = _
 
@@ -46,6 +46,14 @@ class SceneManager(keyManager: GameKeyManager) extends KeyAdapter {
   override def keyReleased(e: KeyEvent): Unit = {
     keyManager.keyReleased(e)
   }
+
+  override def componentResized(e: ComponentEvent): Unit = currentScene.onResize(e.getComponent.getWidth, e.getComponent.getHeight)
+
+  override def componentMoved(e: ComponentEvent): Unit = ()
+
+  override def componentShown(e: ComponentEvent): Unit = currentScene.onExit()
+
+  override def componentHidden(e: ComponentEvent): Unit = currentScene.onEnter()
 }
 
 class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneManager: SceneManager) extends Scene {

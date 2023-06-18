@@ -20,11 +20,7 @@ def main(): Unit = {
   frame.pack()
   frame.createBufferStrategy(3)
   frame.addKeyListener(sceneManager)
-  frame.addComponentListener(new ComponentAdapter {
-    override def componentResized(e: ComponentEvent): Unit = {
-      sceneManager.onResize(frame.getWidth, frame.getHeight)
-    }
-  })
+  frame.addComponentListener(sceneManager)
   frame.setFocusable(true)
   frame.requestFocus()
 
@@ -44,8 +40,6 @@ def main(): Unit = {
   }
 
   val ticker = new Ticker(update, render)
-
   ticker.start()
-
   sys.addShutdownHook(ticker.stop())
 }
