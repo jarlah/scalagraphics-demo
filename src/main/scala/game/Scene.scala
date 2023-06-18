@@ -184,13 +184,8 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
 
     // Handle ball going out of bounds
     if (ball.exists(b => b.y + b.radius * 2 > sceneUtils.height)) {
-      ball = None // Remove the ball from the game
-      timer.schedule(new TimerTask {
-        def run(): Unit = {
-          // Reset ball to initial position
-          ball = Some(Ball(sceneUtils.width / 2, sceneUtils.height / 2, 10, 3, 3))
-        }
-      }, 3000) // Schedule ball reset in 3 seconds
+      ball = None
+      scheduleBall()
     }
   }
 
@@ -198,13 +193,17 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
 
   override def onEnter(): Unit = {
     // delay the ball's movement
-    new java.util.Timer().schedule(
-      new java.util.TimerTask {
-        override def run(): Unit = ball = Some(Ball(sceneUtils.width / 2, sceneUtils.height / 2, 10, 3, 3))
-      },
-      3000 // delay for 3 seconds
-    )
+    scheduleBall()
   }
 
   override def onExit(): Unit = ()
+
+  private def scheduleBall(): Unit = {
+    timer.schedule(new TimerTask {
+      def run(): Unit = {
+        // Reset ball to initial position
+        ball = Some(Ball(sceneUtils.width / 2, sceneUtils.height / 2, 10, 3, 3))
+      }
+    }, 3000)
+  }
 }
