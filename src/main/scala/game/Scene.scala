@@ -12,7 +12,11 @@ trait Scene {
   def onExit(): Unit
 }
 
-class SceneManager(keyManager: GameKeyManager) extends KeyListener, ComponentListener {
+trait SceneSelector {
+  def setScene(scene: Scene): Unit
+}
+
+class SceneManager(keyManager: GameKeyManager) extends KeyListener, ComponentListener, SceneSelector {
 
   private var currentScene: Scene = _
 
@@ -56,7 +60,7 @@ class SceneManager(keyManager: GameKeyManager) extends KeyListener, ComponentLis
   override def componentHidden(e: ComponentEvent): Unit = currentScene.onEnter()
 }
 
-class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneManager: SceneManager) extends Scene {
+class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneManager: SceneSelector) extends Scene {
   private var image: Image = assetManager.getImage("welcome.jpeg")
   override def render: GraphicsOp[Unit] = for {
     _ <- drawImage(image, 0, 0)
