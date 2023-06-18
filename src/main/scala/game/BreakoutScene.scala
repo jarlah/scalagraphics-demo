@@ -17,7 +17,7 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
 
   var paddle: Paddle = Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
   var ball: Ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 10, 3, -3, false)
-  var bricks = Array.fill(10, 5)(Brick(0, 0, 80, 20, true)) // 10 columns and 5 rows of bricks
+  var bricks: Array[Array[Brick]] = Array.fill(10, 5)(Brick(0, 0, 80, 20, true)) // 10 columns and 5 rows of bricks
 
   // Initialize bricks position
   for {

@@ -1,8 +1,10 @@
 package game
 
 import org.scalatest.funsuite.AnyFunSuite
-import org.mockito.Mockito._
-import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito.*
+import org.mockito.ArgumentMatchers.*
+
+import java.awt.Graphics
 
 class BreakoutSceneTest extends AnyFunSuite {
 
@@ -99,5 +101,27 @@ class BreakoutSceneTest extends AnyFunSuite {
 
     // Verify that the ball is not moving
     assert(!scene.ball.moving)
+  }
+
+  test("Ball is rendered with expected graphics operation") {
+    val assetManagerMock = mock(classOf[AssetManager])
+    val keyManagerMock = mock(classOf[GameKeyManager])
+    val sceneUtilsMock = mock(classOf[SceneUtils])
+    val graphicsMock = mock(classOf[Graphics])
+
+    when(sceneUtilsMock.width).thenReturn(800)
+    when(sceneUtilsMock.height).thenReturn(600)
+
+    val scene = BreakoutScene(assetManagerMock, keyManagerMock, sceneUtilsMock)
+    scene.ball = scene.ball.copy(x = 100, y = 100, radius = 10)
+
+    // Create wrapper around the mock graphics object
+    val graphicsWrapper = new GraphicsIOWrapper(graphicsMock)
+
+    // Call render method
+    scene.render.run(graphicsWrapper)
+
+    // Verify that drawOval was called with the correct parameters
+    verify(graphicsMock, times(1)).drawOval(100, 100, 10, 10)
   }
 }
