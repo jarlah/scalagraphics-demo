@@ -8,6 +8,7 @@ import scala.util.Try
 trait GraphicsIO {
   def drawImage(img: Image, x: Int, y: Int): Boolean
   def drawString(str: String, x: Int, y: Int): Unit
+  def clearRect(x: Int, y: Int, width: Int, height: Int): Unit
 }
 
 class GraphicsIOWrapper(g: Graphics) extends GraphicsIO {
@@ -16,6 +17,9 @@ class GraphicsIOWrapper(g: Graphics) extends GraphicsIO {
 
   def drawString(str: String, x: Int, y: Int): Unit =
     g.drawString(str, x, y)
+
+  def clearRect(x: Int, y: Int, width: Int, height: Int): Unit =
+    g.clearRect(x, y, width, height)
 }
 
 case class GraphicsOp[A](run: GraphicsIO => Either[Throwable, A]) {
@@ -36,3 +40,6 @@ def drawImage(image: Image, x: Int, y: Int): GraphicsOp[Boolean] =
 
 def drawString(str: String, x: Int, y: Int): GraphicsOp[Unit] =
   GraphicsOp.liftIO(_.drawString(str, x, y))
+
+def clearRect(x: Int, y: Int, width: Int, height: Int): GraphicsOp[Unit] =
+  GraphicsOp.liftIO(_.clearRect(x, y, width, height))

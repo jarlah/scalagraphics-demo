@@ -12,11 +12,13 @@ trait Scene {
   def onExit(): Unit
 }
 
-trait SceneSelector {
+trait SceneUtils {
   def setScene(scene: Scene): Unit
+  def width: Int
+  def height: Int
 }
 
-class SceneManager(keyManager: GameKeyManager) extends KeyListener, ComponentListener, SceneSelector {
+class SceneManager(keyManager: GameKeyManager, var width: Int, var height: Int) extends KeyListener, ComponentListener, SceneUtils {
 
   private var currentScene: Scene = _
 
@@ -51,16 +53,24 @@ class SceneManager(keyManager: GameKeyManager) extends KeyListener, ComponentLis
     keyManager.keyReleased(e)
   }
 
-  override def componentResized(e: ComponentEvent): Unit = currentScene.onResize(e.getComponent.getWidth, e.getComponent.getHeight)
+  override def componentResized(e: ComponentEvent): Unit = {
+    width = e.getComponent.getWidth
+    height = e.getComponent.getHeight
+    currentScene.onResize(width, height)
+  }
 
   override def componentMoved(e: ComponentEvent): Unit = ()
 
-  override def componentShown(e: ComponentEvent): Unit = currentScene.onExit()
+  override def componentShown(e: ComponentEvent): Unit = {
+    currentScene.onExit()
+  }
 
-  override def componentHidden(e: ComponentEvent): Unit = currentScene.onEnter()
+  override def componentHidden(e: ComponentEvent): Unit = {
+    currentScene.onEnter()
+  }
 }
 
-class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneManager: SceneSelector) extends Scene {
+class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
   private var image: Image = assetManager.getImage("welcome.jpeg")
   override def render: GraphicsOp[Unit] = for {
     _ <- drawImage(image, 0, 0)
@@ -69,13 +79,32 @@ class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, scene
 
   override def update(delta: Double): Unit = {
     if (keyManager.isKeyJustPressed(GameKey.ENTER)) {
-      println("Clicked ENTER")
+      sceneUtils.setScene(new GameScene(assetManager, keyManager, sceneUtils))
     }
   }
 
   override def onResize(newWidth: Int, newHeight: Int): Unit = {
     image = assetManager.getScaledImage("welcome.jpeg", new Dimension(newWidth, newHeight))
   }
+
+  override def onEnter(): Unit = onResize(sceneUtils.width, sceneUtils.height)
+
+  override def onExit(): Unit = ()
+}
+
+class GameScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
+  override def render: GraphicsOp[Unit] = for {
+    _ <- clearRect(0, 0, sceneUtils.width, sceneUtils.height)
+    _ <- drawString("THIS IS THE GAME", 200, 200)
+  } yield ()
+
+  override def update(delta: Double): Unit = {
+    if (keyManager.isKeyJustPressed(GameKey.ENTER)) {
+      sceneUtils.setScene(new WelcomeScene(assetManager, keyManager, sceneUtils))
+    }
+  }
+
+  override def onResize(newWidth: Int, newHeight: Int): Unit = ()
 
   override def onEnter(): Unit = ()
 

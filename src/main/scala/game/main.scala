@@ -4,15 +4,18 @@ import java.awt.event.{ComponentAdapter, ComponentEvent, ComponentListener, KeyL
 import java.awt.{Dimension, Image}
 import javax.swing.{ImageIcon, JFrame, WindowConstants}
 
+val width = 800
+val height = 600
+
 @main
 def main(): Unit = {
   val assetManager = new AssetManager
   val keyManager = new GameKeyManager
-  val sceneManager = new SceneManager(keyManager)
+  val sceneManager = new SceneManager(keyManager, width, height)
 
   sceneManager.setScene(new WelcomeScene(assetManager, keyManager, sceneManager))
 
-  val frame = createGameWindow(sceneManager)
+  val frame = createGameWindow(sceneManager, width, height)
   val ticker = new Ticker(
     sceneManager.update,
     render(frame, sceneManager)
@@ -34,17 +37,17 @@ def render(frame: JFrame, sceneManager: SceneManager): Unit = {
   bs.show()
 }
 
-def createGameWindow[T <: KeyListener with ComponentListener](sceneManager: T): JFrame = {
+def createGameWindow[T <: KeyListener with ComponentListener](listener: T, width: Int, height: Int): JFrame = {
   val frame = new JFrame("Test")
-  frame.setSize(800, 600)
-  frame.setPreferredSize(new Dimension(800, 600))
+  frame.setSize(width, height)
+  frame.setPreferredSize(new Dimension(width, height))
   frame.setLocationRelativeTo(null)
   frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
   frame.setVisible(true)
   frame.pack()
   frame.createBufferStrategy(3)
-  frame.addKeyListener(sceneManager)
-  frame.addComponentListener(sceneManager)
+  frame.addKeyListener(listener)
+  frame.addComponentListener(listener)
   frame.setFocusable(true)
   frame.requestFocus()
   frame
