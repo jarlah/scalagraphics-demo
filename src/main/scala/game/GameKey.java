@@ -6,5 +6,6 @@ public enum GameKey {
     LEFT,
     RIGHT,
     ESC,
-    ENTER
+    ENTER,
+    SPACE
 }

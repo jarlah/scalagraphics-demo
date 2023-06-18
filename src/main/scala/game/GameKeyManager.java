@@ -25,6 +25,7 @@ public class GameKeyManager implements KeyListener {
             case KeyEvent.VK_LEFT -> GameKey.LEFT;
             case KeyEvent.VK_ENTER -> GameKey.ENTER;
             case KeyEvent.VK_ESCAPE -> GameKey.ESC;
+            case KeyEvent.VK_SPACE -> GameKey.SPACE;
             default -> null;
         };
     }
