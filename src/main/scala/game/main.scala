@@ -6,11 +6,10 @@ import javax.swing.{ImageIcon, JFrame, WindowConstants}
 
 @main
 def main(): Unit = {
-  val sceneManager = new SceneManager
-  val keyManager = new GameKeyManager
   val assetManager = new AssetManager
-  val scene = new WelcomeScene(assetManager, keyManager, sceneManager)
-  sceneManager.setScene(scene)
+  val keyManager = new GameKeyManager
+  val sceneManager = new SceneManager(keyManager)
+  sceneManager.setScene(new WelcomeScene(assetManager, keyManager, sceneManager))
 
   val frame = new JFrame("Test")
   frame.setSize(800, 600)
@@ -20,7 +19,7 @@ def main(): Unit = {
   frame.setVisible(true)
   frame.pack()
   frame.createBufferStrategy(3)
-  frame.addKeyListener(keyManager)
+  frame.addKeyListener(sceneManager)
   frame.addComponentListener(new ComponentAdapter {
     override def componentResized(e: ComponentEvent): Unit = {
       sceneManager.onResize(frame.getWidth, frame.getHeight)
@@ -30,7 +29,6 @@ def main(): Unit = {
   frame.requestFocus()
 
   def update(delta: Double): Unit = {
-    keyManager.update()
     sceneManager.update(delta)
   }
 

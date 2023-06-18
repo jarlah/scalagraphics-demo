@@ -1,4 +1,5 @@
 package game
+import java.awt.event.{KeyAdapter, KeyEvent}
 import java.awt.{Dimension, Graphics, Image}
 
 trait Scene {
@@ -11,7 +12,7 @@ trait Scene {
   def onExit(): Unit
 }
 
-class SceneManager {
+class SceneManager(keyManager: GameKeyManager) extends KeyAdapter {
 
   private var currentScene: Scene = _
 
@@ -26,11 +27,24 @@ class SceneManager {
   }
 
   def update(delta: Double): Unit = {
+    keyManager.update()
     currentScene.update(delta)
   }
 
   def onResize(newWidth: Int, newHeight: Int): Unit = {
     currentScene.onResize(newWidth, newHeight)
+  }
+
+  override def keyTyped(e: KeyEvent): Unit = {
+    keyManager.keyTyped(e)
+  }
+
+  override def keyPressed(e: KeyEvent): Unit = {
+    keyManager.keyPressed(e)
+  }
+
+  override def keyReleased(e: KeyEvent): Unit = {
+    keyManager.keyReleased(e)
   }
 }
 
