@@ -35,7 +35,7 @@ public class AssetManager {
 
     private Image loadImage(String assetName) {
         try {
-            return ImageIO.read(Files.newInputStream(Path.of("assets/" + assetName)));
+            return ImageIO.read(getClass().getClassLoader().getResourceAsStream("assets/" + assetName));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
