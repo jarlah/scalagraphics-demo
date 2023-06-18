@@ -1,6 +1,7 @@
 package game
 import java.awt.event.{ComponentEvent, ComponentListener, KeyAdapter, KeyEvent, KeyListener}
 import java.awt.{Dimension, Graphics, Image}
+import java.util.{Timer, TimerTask}
 
 trait Scene {
   def update(delta: Double): Unit
@@ -96,6 +97,8 @@ case class WelcomeScene(assetManager: AssetManager, keyManager: GameKeyManager, 
 
 case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
 
+  val timer = new Timer()
+
   private case class Paddle(x: Int, y: Int, width: Int, height: Int, speed: Int)
   private case class Ball(x: Int, y: Int, radius: Int, speedX: Int, speedY: Int)
   private case class Brick(x: Int, y: Int, width: Int, height: Int, visible: Boolean)
@@ -177,6 +180,17 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
           Some(brick) // Keep brick
         }
       })
+    }
+
+    // Handle ball going out of bounds
+    if (ball.exists(b => b.y + b.radius * 2 > sceneUtils.height)) {
+      ball = None // Remove the ball from the game
+      timer.schedule(new TimerTask {
+        def run(): Unit = {
+          // Reset ball to initial position
+          ball = Some(Ball(sceneUtils.width / 2, sceneUtils.height / 2, 10, 3, 3))
+        }
+      }, 3000) // Schedule ball reset in 3 seconds
     }
   }
 
