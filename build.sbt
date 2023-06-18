@@ -6,3 +6,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "scala2dgame"
   )
+
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.16"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % "test"
+libraryDependencies += "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % "test"

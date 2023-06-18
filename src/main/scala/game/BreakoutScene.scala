@@ -2,17 +2,22 @@ package game
 
 import java.util.Timer
 
+object BreakoutScene {
+  case class Paddle(x: Int, y: Int, width: Int, height: Int, speed: Int)
+
+  case class Ball(x: Int, y: Int, radius: Int, speedX: Int, speedY: Int, moving: Boolean)
+
+  case class Brick(x: Int, y: Int, width: Int, height: Int, visible: Boolean)
+}
+
 case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
+  import BreakoutScene._
 
   val timer = new Timer()
 
-  private case class Paddle(x: Int, y: Int, width: Int, height: Int, speed: Int)
-  private case class Ball(x: Int, y: Int, radius: Int, speedX: Int, speedY: Int, moving: Boolean)
-  private case class Brick(x: Int, y: Int, width: Int, height: Int, visible: Boolean)
-
-  private var paddle: Paddle = Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
-  private var ball: Ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 10, 3, -3, false)
-  private var bricks = Array.fill(10, 5)(Brick(0, 0, 80, 20, true)) // 10 columns and 5 rows of bricks
+  var paddle: Paddle = Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
+  var ball: Ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 10, 3, -3, false)
+  var bricks = Array.fill(10, 5)(Brick(0, 0, 80, 20, true)) // 10 columns and 5 rows of bricks
 
   // Initialize bricks position
   for {
