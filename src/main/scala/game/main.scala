@@ -11,9 +11,9 @@ val height = 600
 def main(): Unit = {
   val assetManager = new AssetManager
   val keyManager = new GameKeyManager
-  val sceneManager = new SceneManager(keyManager, width, height)
+  val sceneManager = SceneManager(keyManager, width, height)
 
-  sceneManager.setScene(new WelcomeScene(assetManager, keyManager, sceneManager))
+  sceneManager.setScene(WelcomeScene(assetManager, keyManager, sceneManager))
 
   val frame = createGameWindow(sceneManager, width, height)
   val ticker = new Ticker(

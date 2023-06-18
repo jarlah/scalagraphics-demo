@@ -9,6 +9,8 @@ trait GraphicsIO {
   def drawImage(img: Image, x: Int, y: Int): Boolean
   def drawString(str: String, x: Int, y: Int): Unit
   def clearRect(x: Int, y: Int, width: Int, height: Int): Unit
+  def drawRect(x: Int, y: Int, width: Int, height: Int): Unit
+  def drawOval(x: Int, y: Int, width: Int, height: Int): Unit
 }
 
 class GraphicsIOWrapper(g: Graphics) extends GraphicsIO {
@@ -20,6 +22,12 @@ class GraphicsIOWrapper(g: Graphics) extends GraphicsIO {
 
   def clearRect(x: Int, y: Int, width: Int, height: Int): Unit =
     g.clearRect(x, y, width, height)
+
+  def drawOval(x: Int, y: Int, width: Int, height: Int): Unit =
+    g.drawOval(x, y, width, height)
+
+  def drawRect(x: Int, y: Int, width: Int, height: Int): Unit =
+    g.drawRect(x, y, width, height)
 }
 
 case class GraphicsOp[A](run: GraphicsIO => Either[Throwable, A]) {
@@ -43,3 +51,9 @@ def drawString(str: String, x: Int, y: Int): GraphicsOp[Unit] =
 
 def clearRect(x: Int, y: Int, width: Int, height: Int): GraphicsOp[Unit] =
   GraphicsOp.liftIO(_.clearRect(x, y, width, height))
+
+def drawOval(x: Int, y: Int, width: Int, height: Int): GraphicsOp[Unit] =
+  GraphicsOp.liftIO(_.drawOval(x, y, width, height))
+
+def drawRect(x: Int, y: Int, width: Int, height: Int): GraphicsOp[Unit] =
+  GraphicsOp.liftIO(_.drawRect(x, y, width, height))
