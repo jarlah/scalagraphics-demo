@@ -67,9 +67,10 @@ case class SceneManager(
   }
 
   override def componentResized(e: ComponentEvent): Unit = {
+    currentScene.onResize(e.getComponent.getWidth, e.getComponent.getHeight)
+    // set these variables first now to let currentScene read old dimension
     width = e.getComponent.getWidth
     height = e.getComponent.getHeight
-    currentScene.onResize(width, height)
   }
 
   override def componentMoved(e: ComponentEvent): Unit = ()

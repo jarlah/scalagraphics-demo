@@ -37,7 +37,11 @@ def render(frame: JFrame, sceneManager: SceneManager): Ticker => Unit =
     val g = bs.getDrawGraphics
     (for {
       _ <- sceneManager.render
-      _ <- drawString(s"FPS: ${ticker.getFps.toString}", 10, sceneManager.height - 10)
+      _ <- drawString(
+        s"FPS: ${ticker.getFps.toString}",
+        10,
+        sceneManager.height - 10
+      )
     } yield ()).run(new GraphicsIOWrapper(g))
     g.dispose()
     bs.show()
@@ -55,6 +59,7 @@ def createGameWindow[T <: KeyListener with ComponentListener](
   frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
   frame.setVisible(true)
   frame.pack()
+  frame.setResizable(false)
   frame.createBufferStrategy(3)
   frame.addKeyListener(listener)
   frame.addComponentListener(listener)

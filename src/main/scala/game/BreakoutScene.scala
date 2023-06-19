@@ -24,6 +24,7 @@ object BreakoutScene {
       true
     }
   }
+
   case class Paddle(
       x: Double,
       y: Double,
@@ -113,9 +114,6 @@ case class BreakoutScene(
 
     if (keyManager.isKeyJustPressed(GameKey.SPACE)) {
       ball = ball.copy(moving = !ball.moving)
-      println(
-        s"Ball is now ${if (ball.moving) "moving" else "stationary"}"
-      )
     }
 
     // if ball is not moving, do nothing
