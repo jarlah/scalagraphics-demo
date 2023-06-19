@@ -30,7 +30,7 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
 
   override def render: GraphicsOp[Unit] = for {
     _ <- clearRect(0, 0, sceneUtils.width, sceneUtils.height)
-    _ <- drawRect(paddle.x.toInt, paddle.y.toInt, paddle.width, paddle.height) // assume drawRect exists
+    _ <- drawRect(paddle.x.toInt, paddle.y.toInt, paddle.width, paddle.height)
     _ <- drawOval(ball.x.toInt, ball.y.toInt, ball.radius, ball.radius)
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
       acc.flatMap(_ => if (brick.visible) drawRect(brick.x, brick.y, brick.width, brick.height) else GraphicsOp.pure(()))
