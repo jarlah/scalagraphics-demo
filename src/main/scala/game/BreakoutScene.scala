@@ -11,6 +11,7 @@ object BreakoutScene {
 }
 
 case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
+
   import BreakoutScene._
 
   val timer = new Timer()
@@ -43,53 +44,55 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
       ball = ball.copy(moving = !ball.moving)
     }
 
-    // Move ball
-    if (ball.moving) {
-      // Move paddle
-      if (keyManager.isKeyPressed(GameKey.LEFT)) {
-        paddle = paddle.copy(x = (paddle.x - paddle.speed * delta).max(0))
-      }
-      if (keyManager.isKeyPressed(GameKey.RIGHT)) {
-        paddle = paddle.copy(x = (paddle.x + paddle.speed * delta).min(sceneUtils.width - paddle.width))
-      }
-      ball = ball.copy(
-        x = ball.x + ball.speedX * delta,
-        y = ball.y + ball.speedY * delta
-      )
+    // if ball is not moving, do nothing
+    if (!ball.moving) return;
 
-      // Handle ball-wall collision
-      if (ball.x < 0 || ball.x + ball.radius * 2 > sceneUtils.width)
-        ball = ball.copy(speedX = -ball.speedX)
+    // Move paddle
+    if (keyManager.isKeyPressed(GameKey.LEFT)) {
+      paddle = paddle.copy(x = (paddle.x - paddle.speed * delta).max(0))
+    }
 
-      if (ball.y < 0)
+    if (keyManager.isKeyPressed(GameKey.RIGHT)) {
+      paddle = paddle.copy(x = (paddle.x + paddle.speed * delta).min(sceneUtils.width - paddle.width))
+    }
+
+    ball = ball.copy(
+      x = ball.x + ball.speedX * delta,
+      y = ball.y + ball.speedY * delta
+    )
+
+    // Handle ball-wall collision
+    if (ball.x < 0 || ball.x + ball.radius * 2 > sceneUtils.width)
+      ball = ball.copy(speedX = -ball.speedX)
+
+    if (ball.y < 0)
+      ball = ball.copy(speedY = -ball.speedY)
+
+    // Handle ball-paddle collision
+    if (ball.y + ball.radius >= paddle.y &&
+      ball.y <= paddle.y + paddle.height &&
+      ball.x + ball.radius >= paddle.x &&
+      ball.x <= paddle.x + paddle.width)
+      ball = ball.copy(speedY = -ball.speedY)
+
+    // Handle ball-brick collision
+    bricks = bricks.map(_.flatMap { brick =>
+      if (ball.y + ball.radius >= brick.y &&
+        ball.y <= brick.y + brick.height &&
+        ball.x + ball.radius >= brick.x &&
+        ball.x <= brick.x + brick.width) {
+        // collision detected
         ball = ball.copy(speedY = -ball.speedY)
-
-      // Handle ball-paddle collision
-      if (ball.y + ball.radius >= paddle.y &&
-        ball.y <= paddle.y + paddle.height &&
-        ball.x + ball.radius >= paddle.x &&
-        ball.x <= paddle.x + paddle.width)
-        ball = ball.copy(speedY = -ball.speedY)
-
-      // Handle ball-brick collision
-      bricks = bricks.map(_.flatMap { brick =>
-        if (ball.y + ball.radius >= brick.y &&
-          ball.y <= brick.y + brick.height &&
-          ball.x + ball.radius >= brick.x &&
-          ball.x <= brick.x + brick.width) {
-          // collision detected
-          ball = ball.copy(speedY = -ball.speedY)
-          None // Remove brick
-        } else {
-          Some(brick) // Keep brick
-        }
-      })
-
-      // Handle ball going out of bounds
-      if (ball.y + ball.radius * 2 > sceneUtils.height) {
-        paddle = Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
-        ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 10, 3, -3, false)
+        None // Remove brick
+      } else {
+        Some(brick) // Keep brick
       }
+    })
+
+    // Handle ball going out of bounds
+    if (ball.y + ball.radius * 2 > sceneUtils.height) {
+      paddle = Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
+      ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 10, 3, -3, false)
     }
   }
 
