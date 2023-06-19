@@ -6,7 +6,7 @@ import org.mockito.ArgumentMatchers.*
 
 import java.awt.Graphics
 
-class BreakoutSceneTest extends AnyFunSuite {
+class BreakoutSceneSpec extends AnyFunSuite {
 
   test("Ball changes direction when it hits the top of the screen") {
 

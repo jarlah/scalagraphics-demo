@@ -31,7 +31,11 @@ object BreakoutScene {
       height: Double,
       speed: Double
   ) extends Position
-      with RectangularShape
+      with RectangularShape {
+
+    def render: GraphicsOp[Unit] =
+      drawRect(x.toInt, y.toInt, width.toInt, height.toInt)
+  }
 
   case class Ball(
       x: Double,
@@ -44,6 +48,9 @@ object BreakoutScene {
       with RectangularShape {
     override val width: Double = radius * 2
     override val height: Double = radius * 2
+
+    def render: GraphicsOp[Unit] =
+      drawOval((x - radius).toInt, (y - radius).toInt, radius * 2, radius * 2)
   }
 
   case class Brick(
@@ -53,7 +60,11 @@ object BreakoutScene {
       height: Double,
       visible: Boolean
   ) extends Position
-      with RectangularShape
+      with RectangularShape {
+
+    def render: GraphicsOp[Unit] =
+      drawRect(x.toInt, y.toInt, width.toInt, height.toInt)
+  }
 }
 
 case class BreakoutScene(
@@ -85,36 +96,12 @@ case class BreakoutScene(
   override def render: GraphicsOp[Unit] = for {
     _ <- clearRect(0, 0, sceneUtils.width, sceneUtils.height)
     _ <- setColor(Color.BLACK)
-    _ <- drawRect(
-      paddle.x.toInt,
-      paddle.y.toInt,
-      paddle.width.toInt,
-      paddle.height.toInt
-    )
-    _ <- drawOval(
-      ball.x.toInt,
-      ball.y.toInt,
-      ball.width.toInt,
-      ball.height.toInt
-    )
-    _ <- setColor(Color.RED)
-    // Debug rectangle
-    _ <- drawRect(
-      ball.x.toInt,
-      ball.y.toInt,
-      ball.width.toInt,
-      ball.height.toInt
-    )
-    _ <- setColor(Color.BLACK)
+    _ <- paddle.render
+    _ <- ball.render
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
       acc.flatMap(_ =>
         if (brick.visible)
-          drawRect(
-            brick.x.toInt,
-            brick.y.toInt,
-            brick.width.toInt,
-            brick.height.toInt
-          )
+          brick.render
         else
           GraphicsOp.pure(())
       )
