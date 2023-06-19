@@ -3,9 +3,9 @@ package game
 import java.util.Timer
 
 object BreakoutScene {
-  case class Paddle(x: Int, y: Int, width: Int, height: Int, speed: Int)
+  case class Paddle(x: Double, y: Double, width: Int, height: Int, speed: Double)
 
-  case class Ball(x: Int, y: Int, radius: Int, speedX: Int, speedY: Int, moving: Boolean)
+  case class Ball(x: Double, y: Double, radius: Int, speedX: Double, speedY: Double, moving: Boolean)
 
   case class Brick(x: Int, y: Int, width: Int, height: Int, visible: Boolean)
 }
@@ -29,8 +29,8 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
 
   override def render: GraphicsOp[Unit] = for {
     _ <- clearRect(0, 0, sceneUtils.width, sceneUtils.height)
-    _ <- drawRect(paddle.x, paddle.y, paddle.width, paddle.height) // assume drawRect exists
-    _ <- drawOval(ball.x, ball.y, ball.radius, ball.radius)
+    _ <- drawRect(paddle.x.toInt, paddle.y.toInt, paddle.width, paddle.height) // assume drawRect exists
+    _ <- drawOval(ball.x.toInt, ball.y.toInt, ball.radius, ball.radius)
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
       acc.flatMap(_ => if (brick.visible) drawRect(brick.x, brick.y, brick.width, brick.height) else GraphicsOp.pure(()))
     }
@@ -47,12 +47,15 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
     if (ball.moving) {
       // Move paddle
       if (keyManager.isKeyPressed(GameKey.LEFT)) {
-        paddle = paddle.copy(x = (paddle.x - paddle.speed * delta).toInt.max(0))
+        paddle = paddle.copy(x = (paddle.x - paddle.speed * delta).max(0))
       }
       if (keyManager.isKeyPressed(GameKey.RIGHT)) {
-        paddle = paddle.copy(x = (paddle.x + paddle.speed * delta).toInt.min(sceneUtils.width - paddle.width))
+        paddle = paddle.copy(x = (paddle.x + paddle.speed * delta).min(sceneUtils.width - paddle.width))
       }
-      ball = ball.copy(x = (ball.x + ball.speedX * delta).toInt, y = (ball.y + ball.speedY * delta).toInt)
+      ball = ball.copy(
+        x = ball.x + ball.speedX * delta,
+        y = ball.y + ball.speedY * delta
+      )
 
       // Handle ball-wall collision
       if (ball.x < 0 || ball.x + ball.radius * 2 > sceneUtils.width)
