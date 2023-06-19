@@ -70,7 +70,7 @@ public class GameKeyManager implements KeyListener {
         return keys.get(key);
     }
 
-    public boolean isKeyJustPressed(GameKey key){
+    public boolean isKeyJustPressed(GameKey key) {
         return justPressed.get(key);
     }
 

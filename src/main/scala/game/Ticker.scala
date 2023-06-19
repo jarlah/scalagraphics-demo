@@ -1,7 +1,7 @@
 package game
 
 object Ticker {
-  private val NS_PER_UPDATE = 1000000000D / 60
+  private val NS_PER_UPDATE = 1000000000d / 60
 }
 
 class Ticker(update: Double => Unit, render: => Unit) extends Runnable {

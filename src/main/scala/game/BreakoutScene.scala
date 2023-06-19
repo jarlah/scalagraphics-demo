@@ -3,22 +3,63 @@ package game
 import java.util.Timer
 
 object BreakoutScene {
-  case class Paddle(x: Double, y: Double, width: Int, height: Int, speed: Double)
+  trait Position {
+    val x: Double
+    val y: Double
+  }
 
-  case class Ball(x: Double, y: Double, radius: Int, speedX: Double, speedY: Double, moving: Boolean)
+  trait Rectangle {
+    val x: Double
+    val y: Double
+    val width: Double
+    val height: Double
+  }
 
-  case class Brick(x: Int, y: Int, width: Int, height: Int, visible: Boolean)
+  case class Paddle(
+      x: Double,
+      y: Double,
+      width: Double,
+      height: Double,
+      speed: Double
+  ) extends Position
+      with Rectangle
+
+  case class Ball(
+      x: Double,
+      y: Double,
+      radius: Int,
+      speedX: Double,
+      speedY: Double,
+      moving: Boolean
+  ) extends Position
+
+  case class Brick(
+      x: Double,
+      y: Double,
+      width: Double,
+      height: Double,
+      visible: Boolean
+  ) extends Position
+      with Rectangle
 }
 
-case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
+case class BreakoutScene(
+    assetManager: AssetManager,
+    keyManager: GameKeyManager,
+    sceneUtils: SceneUtils
+) extends Scene {
 
   import BreakoutScene._
 
   val timer = new Timer()
 
-  var paddle: Paddle = Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
-  var ball: Ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 10, 3, -3, false)
-  var bricks: Array[Array[Brick]] = Array.fill(10, 5)(Brick(0, 0, 80, 20, true)) // 10 columns and 5 rows of bricks
+  var paddle: Paddle =
+    Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
+  var ball: Ball =
+    Ball(paddle.x + paddle.width / 2, paddle.y - 10, 10, 3, -3, false)
+  var bricks: Array[Array[Brick]] = Array.fill(10, 5)(
+    Brick(0, 0, 80, 20, true)
+  ) // 10 columns and 5 rows of bricks
 
   // Initialize bricks position
   for {
@@ -30,13 +71,27 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
 
   override def render: GraphicsOp[Unit] = for {
     _ <- clearRect(0, 0, sceneUtils.width, sceneUtils.height)
-    _ <- drawRect(paddle.x.toInt, paddle.y.toInt, paddle.width, paddle.height)
+    _ <- drawRect(
+      paddle.x.toInt,
+      paddle.y.toInt,
+      paddle.width.toInt,
+      paddle.height.toInt
+    )
     _ <- drawOval(ball.x.toInt, ball.y.toInt, ball.radius, ball.radius)
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
-      acc.flatMap(_ => if (brick.visible) drawRect(brick.x, brick.y, brick.width, brick.height) else GraphicsOp.pure(()))
+      acc.flatMap(_ =>
+        if (brick.visible)
+          drawRect(
+            brick.x.toInt,
+            brick.y.toInt,
+            brick.width.toInt,
+            brick.height.toInt
+          )
+        else
+          GraphicsOp.pure(())
+      )
     }
   } yield ()
-
 
   def update(delta: Double): Unit = {
 
@@ -53,7 +108,9 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
     }
 
     if (keyManager.isKeyPressed(GameKey.RIGHT)) {
-      paddle = paddle.copy(x = (paddle.x + paddle.speed * delta).min(sceneUtils.width - paddle.width))
+      paddle = paddle.copy(x =
+        (paddle.x + paddle.speed * delta).min(sceneUtils.width - paddle.width)
+      )
     }
 
     ball = ball.copy(
@@ -69,18 +126,22 @@ case class BreakoutScene(assetManager: AssetManager, keyManager: GameKeyManager,
       ball = ball.copy(speedY = -ball.speedY)
 
     // Handle ball-paddle collision
-    if (ball.y + ball.radius >= paddle.y &&
+    if (
+      ball.y + ball.radius >= paddle.y &&
       ball.y <= paddle.y + paddle.height &&
       ball.x + ball.radius >= paddle.x &&
-      ball.x <= paddle.x + paddle.width)
+      ball.x <= paddle.x + paddle.width
+    )
       ball = ball.copy(speedY = -ball.speedY)
 
     // Handle ball-brick collision
     bricks = bricks.map(_.flatMap { brick =>
-      if (ball.y + ball.radius >= brick.y &&
+      if (
+        ball.y + ball.radius >= brick.y &&
         ball.y <= brick.y + brick.height &&
         ball.x + ball.radius >= brick.x &&
-        ball.x <= brick.x + brick.width) {
+        ball.x <= brick.x + brick.width
+      ) {
         // collision detected
         ball = ball.copy(speedY = -ball.speedY)
         None // Remove brick

@@ -40,7 +40,8 @@ case class GraphicsOp[A](run: GraphicsIO => Either[Throwable, A]) {
 
 object GraphicsOp {
   def pure[A](value: A): GraphicsOp[A] = GraphicsOp(g => Right(value))
-  def liftIO[A](f: GraphicsIO => A): GraphicsOp[A] = GraphicsOp(g => Try(f(g)).toEither)
+  def liftIO[A](f: GraphicsIO => A): GraphicsOp[A] =
+    GraphicsOp(g => Try(f(g)).toEither)
 }
 
 def drawImage(image: Image, x: Int, y: Int): GraphicsOp[Boolean] =

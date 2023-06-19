@@ -1,6 +1,11 @@
 package game
 
-import java.awt.event.{ComponentAdapter, ComponentEvent, ComponentListener, KeyListener}
+import java.awt.event.{
+  ComponentAdapter,
+  ComponentEvent,
+  ComponentListener,
+  KeyListener
+}
 import java.awt.{Dimension, Image}
 import javax.swing.{ImageIcon, JFrame, WindowConstants}
 
@@ -31,13 +36,17 @@ def render(frame: JFrame, sceneManager: SceneManager): Unit = {
   val g = bs.getDrawGraphics
   sceneManager.render.run(new GraphicsIOWrapper(g)) match {
     case Left(e) => e.printStackTrace()
-    case _ =>
+    case _       =>
   }
   g.dispose()
   bs.show()
 }
 
-def createGameWindow[T <: KeyListener with ComponentListener](listener: T, width: Int, height: Int): JFrame = {
+def createGameWindow[T <: KeyListener with ComponentListener](
+    listener: T,
+    width: Int,
+    height: Int
+): JFrame = {
   val frame = new JFrame("Test")
   frame.setSize(width, height)
   frame.setPreferredSize(new Dimension(width, height))

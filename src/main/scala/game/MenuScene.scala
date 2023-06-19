@@ -2,7 +2,11 @@ package game
 
 import java.awt.{Dimension, Image}
 
-case class MenuScene(assetManager: AssetManager, keyManager: GameKeyManager, sceneUtils: SceneUtils) extends Scene {
+case class MenuScene(
+    assetManager: AssetManager,
+    keyManager: GameKeyManager,
+    sceneUtils: SceneUtils
+) extends Scene {
   private var image: Image = assetManager.getImage("welcome.jpeg")
   override def render: GraphicsOp[Unit] = for {
     _ <- drawImage(image, 0, 0)
@@ -11,12 +15,17 @@ case class MenuScene(assetManager: AssetManager, keyManager: GameKeyManager, sce
 
   override def update(delta: Double): Unit = {
     if (keyManager.isKeyJustPressed(GameKey.ENTER)) {
-      sceneUtils.setScene(new BreakoutScene(assetManager, keyManager, sceneUtils))
+      sceneUtils.setScene(
+        new BreakoutScene(assetManager, keyManager, sceneUtils)
+      )
     }
   }
 
   override def onResize(newWidth: Int, newHeight: Int): Unit = {
-    image = assetManager.getScaledImage("welcome.jpeg", new Dimension(newWidth, newHeight))
+    image = assetManager.getScaledImage(
+      "welcome.jpeg",
+      new Dimension(newWidth, newHeight)
+    )
   }
 
   override def onEnter(): Unit = onResize(sceneUtils.width, sceneUtils.height)

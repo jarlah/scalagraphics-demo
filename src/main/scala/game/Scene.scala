@@ -1,5 +1,11 @@
 package game
-import java.awt.event.{ComponentEvent, ComponentListener, KeyAdapter, KeyEvent, KeyListener}
+import java.awt.event.{
+  ComponentEvent,
+  ComponentListener,
+  KeyAdapter,
+  KeyEvent,
+  KeyListener
+}
 import java.awt.{Dimension, Graphics, Image}
 import java.util.{Timer, TimerTask}
 
@@ -19,7 +25,13 @@ trait SceneUtils {
   def height: Int
 }
 
-case class SceneManager(keyManager: GameKeyManager, var width: Int, var height: Int) extends KeyListener, ComponentListener, SceneUtils {
+case class SceneManager(
+    keyManager: GameKeyManager,
+    var width: Int,
+    var height: Int
+) extends KeyListener,
+      ComponentListener,
+      SceneUtils {
 
   private var currentScene: Scene = _
 
