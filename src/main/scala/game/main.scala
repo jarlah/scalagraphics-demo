@@ -1,12 +1,7 @@
 package game
 
-import java.awt.event.{
-  ComponentAdapter,
-  ComponentEvent,
-  ComponentListener,
-  KeyListener
-}
-import java.awt.{Dimension, Image}
+import java.awt.event.{ComponentAdapter, ComponentEvent, ComponentListener, KeyListener}
+import java.awt.{Dimension, Graphics2D, Image}
 import javax.swing.{ImageIcon, JFrame, WindowConstants}
 
 val width = 800
@@ -42,7 +37,7 @@ def render(frame: JFrame, sceneManager: SceneManager): Ticker => Unit =
         10,
         sceneManager.height - 10
       )
-    } yield ()).run(new GraphicsIOWrapper(g))
+    } yield ()).run(GraphicsIOWrapper.unsafeApply(g))
     g.dispose()
     bs.show()
   }

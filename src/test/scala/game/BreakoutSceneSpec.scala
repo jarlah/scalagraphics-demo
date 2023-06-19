@@ -4,7 +4,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.mockito.Mockito.*
 import org.mockito.ArgumentMatchers.*
 
-import java.awt.Graphics
+import java.awt.{Graphics, Graphics2D}
 
 class BreakoutSceneSpec extends AnyFunSuite {
 
@@ -118,7 +118,7 @@ class BreakoutSceneSpec extends AnyFunSuite {
     val assetManagerMock = mock(classOf[AssetManager])
     val keyManagerMock = mock(classOf[GameKeyManager])
     val sceneUtilsMock = mock(classOf[SceneUtils])
-    val graphicsMock = mock(classOf[Graphics])
+    val graphicsMock = mock(classOf[Graphics2D])
 
     when(sceneUtilsMock.width).thenReturn(800)
     when(sceneUtilsMock.height).thenReturn(600)
