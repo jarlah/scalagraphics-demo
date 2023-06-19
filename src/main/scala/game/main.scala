@@ -13,7 +13,7 @@ def main(): Unit = {
   val keyManager = new GameKeyManager
   val sceneManager = SceneManager(keyManager, width, height)
 
-  sceneManager.setScene(MenuScene(assetManager, keyManager, sceneManager))
+  sceneManager.setScene(BreakoutScene(assetManager, keyManager, sceneManager))
 
   val frame = createGameWindow(sceneManager, width, height)
   val ticker = new Ticker(
