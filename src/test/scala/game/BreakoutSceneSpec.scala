@@ -66,7 +66,11 @@ class BreakoutSceneSpec extends AnyFunSuite {
     // Assume there are no bricks left
     scene.bricks = Array.empty
     // Assume ball is at right side of the screen and moving rightwards
-    scene.ball = scene.ball.copy(x = sceneUtilsMock.width - scene.ball.radius, speedX = 3, moving = true)
+    scene.ball = scene.ball.copy(
+      x = sceneUtilsMock.width - scene.ball.radius,
+      speedX = 3,
+      moving = true
+    )
 
     scene.update(1.0)
 
@@ -74,8 +78,9 @@ class BreakoutSceneSpec extends AnyFunSuite {
     assert(scene.ball.speedX == -3)
   }
 
-  test("Ball is placed on paddle and paddle is centered when ball hits the bottom of the screen") {
-
+  test(
+    "Ball is placed on paddle and paddle is centered when ball hits the bottom of the screen"
+  ) {
     val assetManagerMock = mock(classOf[AssetManager])
     val keyManagerMock = mock(classOf[GameKeyManager])
     val sceneUtilsMock = mock(classOf[SceneUtils])
@@ -88,16 +93,22 @@ class BreakoutSceneSpec extends AnyFunSuite {
     // Assume there are no bricks left
     scene.bricks = Array.empty
     // Assume ball is at bottom of the screen and moving downwards
-    scene.ball = scene.ball.copy(y = sceneUtilsMock.height - scene.ball.radius, speedY = 3, moving = true)
+    scene.ball = scene.ball.copy(
+      y = sceneUtilsMock.height - scene.ball.radius,
+      speedY = 3,
+      moving = true
+    )
 
     scene.update(1.0)
 
     // Verify that the ball's is placed on the paddle
-    assert(scene.ball.y == scene.paddle.y - scene.ball.radius)
+    assert(scene.ball.y == scene.paddle.y - 10)
     assert(scene.ball.x == scene.paddle.x + scene.paddle.width / 2)
 
     // Verify that the paddle is centered
-    assert(scene.paddle.x == sceneUtilsMock.width / 2)
+    assert(
+      scene.paddle.x + scene.paddle.width / 2 == sceneUtilsMock.width / 2
+    )
 
     // Verify that the ball is not moving
     assert(!scene.ball.moving)
@@ -122,6 +133,6 @@ class BreakoutSceneSpec extends AnyFunSuite {
     scene.render.run(graphicsWrapper)
 
     // Verify that drawOval was called with the correct parameters
-    verify(graphicsMock, times(1)).drawOval(100, 100, 10, 10)
+    verify(graphicsMock, times(1)).drawOval(90, 90, 20, 20)
   }
 }

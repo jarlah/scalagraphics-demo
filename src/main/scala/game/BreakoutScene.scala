@@ -13,14 +13,14 @@ object BreakoutScene {
     val width: Double
     val height: Double
 
-    def intersects(other: RectangularShape): Boolean = {
-      val thisRight = this.x + this.width
-      val thisBottom = this.y + this.height
-      val otherRight = other.x + other.width
-      val otherBottom = other.y + other.height
+    def left: Double = x
+    def right: Double = x + width
+    def top: Double = y
+    def bottom: Double = y + height
 
-      if (thisRight < other.x || this.x > otherRight) return false
-      if (thisBottom < other.y || this.y > otherBottom) return false
+    def intersects(other: RectangularShape): Boolean = {
+      if (this.right < other.left || this.left > other.right) return false
+      if (this.bottom < other.top || this.top > other.bottom) return false
       true
     }
   }
@@ -48,6 +48,12 @@ object BreakoutScene {
       with RectangularShape {
     override val width: Double = radius * 2
     override val height: Double = radius * 2
+
+    // Override the bounds to account for center positioning
+    override def left: Double = x - radius
+    override def right: Double = x + radius
+    override def top: Double = y - radius
+    override def bottom: Double = y + radius
 
     def render: GraphicsOp[Unit] =
       drawOval((x - radius).toInt, (y - radius).toInt, radius * 2, radius * 2)
@@ -78,7 +84,7 @@ case class BreakoutScene(
   val timer = new Timer()
 
   var paddle: Paddle =
-    Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
+    Paddle(sceneUtils.width / 2 - 80 / 2, sceneUtils.height - 50, 80, 10, 5)
   var ball: Ball =
     Ball(paddle.x + paddle.width / 2, paddle.y - 10, 5, 3, -3, false)
   var bricks: Array[Array[Brick]] = Array.fill(10, 5)(
@@ -99,12 +105,7 @@ case class BreakoutScene(
     _ <- paddle.render
     _ <- ball.render
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
-      acc.flatMap(_ =>
-        if (brick.visible)
-          brick.render
-        else
-          GraphicsOp.pure(())
-      )
+      acc.flatMap(_ => brick.render)
     }
   } yield ()
 
@@ -112,6 +113,9 @@ case class BreakoutScene(
 
     if (keyManager.isKeyJustPressed(GameKey.SPACE)) {
       ball = ball.copy(moving = !ball.moving)
+      println(
+        s"Ball is now ${if (ball.moving) "moving" else "stationary"}"
+      )
     }
 
     // if ball is not moving, do nothing
@@ -175,7 +179,13 @@ case class BreakoutScene(
 
     // Handle ball going out of bounds
     if (ball.y + ball.radius * 2 > sceneUtils.height) {
-      paddle = Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
+      paddle = Paddle(
+        sceneUtils.width / 2 - paddle.width / 2,
+        sceneUtils.height - 50,
+        80,
+        10,
+        5
+      )
       ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 5, 3, -3, false)
     }
   }

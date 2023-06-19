@@ -30,8 +30,16 @@ class BallSpec extends AnyFunSuite {
   test(
     "Ball does not intersect with a rectangle when just outside its boundaries"
   ) {
-    val ball = Ball(61, 50, 10, 0, 0, moving = false)
     val rectangle = Paddle(40, 40, 20, 20, 0)
+    val ballRadius = 10
+    val ball = Ball(
+      rectangle.right + ballRadius + 1,
+      50,
+      ballRadius,
+      0,
+      0,
+      moving = false
+    )
 
     assert(!ball.intersects(rectangle))
   }
