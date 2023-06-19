@@ -1,7 +1,7 @@
 package game
 
 import java.awt.event.{ComponentAdapter, ComponentEvent, ComponentListener}
-import java.awt.{Dimension, Graphics, Image}
+import java.awt.{Color, Dimension, Graphics, Image}
 import javax.swing.{ImageIcon, JFrame, WindowConstants}
 import scala.util.Try
 
@@ -11,6 +11,7 @@ trait GraphicsIO {
   def clearRect(x: Int, y: Int, width: Int, height: Int): Unit
   def drawRect(x: Int, y: Int, width: Int, height: Int): Unit
   def drawOval(x: Int, y: Int, width: Int, height: Int): Unit
+  def setColor(color: Color): Unit
 }
 
 class GraphicsIOWrapper(g: Graphics) extends GraphicsIO {
@@ -28,6 +29,9 @@ class GraphicsIOWrapper(g: Graphics) extends GraphicsIO {
 
   def drawRect(x: Int, y: Int, width: Int, height: Int): Unit =
     g.drawRect(x, y, width, height)
+
+  override def setColor(color: Color): Unit =
+    g.setColor(color)
 }
 
 case class GraphicsOp[A](run: GraphicsIO => Either[Throwable, A]) {
@@ -58,3 +62,6 @@ def drawOval(x: Int, y: Int, width: Int, height: Int): GraphicsOp[Unit] =
 
 def drawRect(x: Int, y: Int, width: Int, height: Int): GraphicsOp[Unit] =
   GraphicsOp.liftIO(_.drawRect(x, y, width, height))
+
+def setColor(color: Color): GraphicsOp[Unit] =
+  GraphicsOp.liftIO(_.setColor(color))

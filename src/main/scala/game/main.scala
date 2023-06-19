@@ -31,16 +31,17 @@ def main(): Unit = {
   sys.addShutdownHook(ticker.stop())
 }
 
-def render(frame: JFrame, sceneManager: SceneManager): Unit = {
-  val bs = frame.getBufferStrategy
-  val g = bs.getDrawGraphics
-  sceneManager.render.run(new GraphicsIOWrapper(g)) match {
-    case Left(e) => e.printStackTrace()
-    case _       =>
+def render(frame: JFrame, sceneManager: SceneManager): Ticker => Unit =
+  ticker => {
+    val bs = frame.getBufferStrategy
+    val g = bs.getDrawGraphics
+    (for {
+      _ <- sceneManager.render
+      _ <- drawString(s"FPS: ${ticker.getFps.toString}", 10, sceneManager.height - 10)
+    } yield ()).run(new GraphicsIOWrapper(g))
+    g.dispose()
+    bs.show()
   }
-  g.dispose()
-  bs.show()
-}
 
 def createGameWindow[T <: KeyListener with ComponentListener](
     listener: T,

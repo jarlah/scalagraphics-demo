@@ -1,5 +1,6 @@
 package game
 
+import java.awt.Color
 import java.util.Timer
 
 object BreakoutScene {
@@ -8,13 +9,21 @@ object BreakoutScene {
     val y: Double
   }
 
-  trait Rectangle {
-    val x: Double
-    val y: Double
+  trait RectangularShape extends Position {
     val width: Double
     val height: Double
-  }
 
+    def intersects(other: RectangularShape): Boolean = {
+      val thisRight = this.x + this.width
+      val thisBottom = this.y + this.height
+      val otherRight = other.x + other.width
+      val otherBottom = other.y + other.height
+
+      if (thisRight < other.x || this.x > otherRight) return false
+      if (thisBottom < other.y || this.y > otherBottom) return false
+      true
+    }
+  }
   case class Paddle(
       x: Double,
       y: Double,
@@ -22,7 +31,7 @@ object BreakoutScene {
       height: Double,
       speed: Double
   ) extends Position
-      with Rectangle
+      with RectangularShape
 
   case class Ball(
       x: Double,
@@ -32,6 +41,10 @@ object BreakoutScene {
       speedY: Double,
       moving: Boolean
   ) extends Position
+      with RectangularShape {
+    override val width: Double = radius * 2
+    override val height: Double = radius * 2
+  }
 
   case class Brick(
       x: Double,
@@ -40,7 +53,7 @@ object BreakoutScene {
       height: Double,
       visible: Boolean
   ) extends Position
-      with Rectangle
+      with RectangularShape
 }
 
 case class BreakoutScene(
@@ -56,7 +69,7 @@ case class BreakoutScene(
   var paddle: Paddle =
     Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
   var ball: Ball =
-    Ball(paddle.x + paddle.width / 2, paddle.y - 10, 10, 3, -3, false)
+    Ball(paddle.x + paddle.width / 2, paddle.y - 10, 5, 3, -3, false)
   var bricks: Array[Array[Brick]] = Array.fill(10, 5)(
     Brick(0, 0, 80, 20, true)
   ) // 10 columns and 5 rows of bricks
@@ -71,13 +84,28 @@ case class BreakoutScene(
 
   override def render: GraphicsOp[Unit] = for {
     _ <- clearRect(0, 0, sceneUtils.width, sceneUtils.height)
+    _ <- setColor(Color.BLACK)
     _ <- drawRect(
       paddle.x.toInt,
       paddle.y.toInt,
       paddle.width.toInt,
       paddle.height.toInt
     )
-    _ <- drawOval(ball.x.toInt, ball.y.toInt, ball.radius, ball.radius)
+    _ <- drawOval(
+      ball.x.toInt,
+      ball.y.toInt,
+      ball.width.toInt,
+      ball.height.toInt
+    )
+    _ <- setColor(Color.RED)
+    // Debug rectangle
+    _ <- drawRect(
+      ball.x.toInt,
+      ball.y.toInt,
+      ball.width.toInt,
+      ball.height.toInt
+    )
+    _ <- setColor(Color.BLACK)
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
       acc.flatMap(_ =>
         if (brick.visible)
@@ -113,37 +141,45 @@ case class BreakoutScene(
       )
     }
 
+    val oldBall = ball
+
     ball = ball.copy(
       x = ball.x + ball.speedX * delta,
       y = ball.y + ball.speedY * delta
     )
 
     // Handle ball-wall collision
-    if (ball.x < 0 || ball.x + ball.radius * 2 > sceneUtils.width)
-      ball = ball.copy(speedX = -ball.speedX)
-
-    if (ball.y < 0)
-      ball = ball.copy(speedY = -ball.speedY)
+    if (ball.x - ball.radius < 0 || ball.x + ball.radius > sceneUtils.width) {
+      ball = ball.copy(
+        x = oldBall.x, // revert x
+        speedX = -ball.speedX
+      )
+    }
+    if (ball.y - ball.radius < 0 || ball.y + ball.radius > sceneUtils.height) {
+      ball = ball.copy(
+        y = oldBall.y, // revert y
+        speedY = -ball.speedY
+      )
+    }
 
     // Handle ball-paddle collision
-    if (
-      ball.y + ball.radius >= paddle.y &&
-      ball.y <= paddle.y + paddle.height &&
-      ball.x + ball.radius >= paddle.x &&
-      ball.x <= paddle.x + paddle.width
-    )
-      ball = ball.copy(speedY = -ball.speedY)
+    if (ball.intersects(paddle)) {
+      ball = ball.copy(
+        x = oldBall.x, // revert x
+        y = paddle.y - 10,
+        speedY = -ball.speedY
+      )
+    }
 
     // Handle ball-brick collision
     bricks = bricks.map(_.flatMap { brick =>
-      if (
-        ball.y + ball.radius >= brick.y &&
-        ball.y <= brick.y + brick.height &&
-        ball.x + ball.radius >= brick.x &&
-        ball.x <= brick.x + brick.width
-      ) {
+      if (ball.intersects(brick)) {
         // collision detected
-        ball = ball.copy(speedY = -ball.speedY)
+        ball = ball.copy(
+          x = oldBall.x, // revert x
+          y = oldBall.y, // revert y
+          speedY = -ball.speedY
+        )
         None // Remove brick
       } else {
         Some(brick) // Keep brick
@@ -153,7 +189,7 @@ case class BreakoutScene(
     // Handle ball going out of bounds
     if (ball.y + ball.radius * 2 > sceneUtils.height) {
       paddle = Paddle(sceneUtils.width / 2, sceneUtils.height - 50, 80, 10, 5)
-      ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 10, 3, -3, false)
+      ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 5, 3, -3, false)
     }
   }
 

@@ -4,8 +4,9 @@ object Ticker {
   private val NS_PER_UPDATE = 1000000000d / 60
 }
 
-class Ticker(update: Double => Unit, render: => Unit) extends Runnable {
+class Ticker(update: Double => Unit, render: Ticker => Unit) extends Runnable {
   private var running = false
+  private var fps: Int = 0
 
   def start(): Unit = {
     val thread = new Thread(this)
@@ -31,14 +32,16 @@ class Ticker(update: Double => Unit, render: => Unit) extends Runnable {
         delta -= 1
       }
       if (running) {
-        render
+        render(this)
       }
       frames += 1
       if (System.currentTimeMillis - timer > 1000) {
         timer += 1000
-        System.out.println("FPS: " + frames)
+        fps = frames
         frames = 0
       }
     }
   }
+
+  def getFps: Int = fps
 }
