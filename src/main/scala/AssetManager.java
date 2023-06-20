@@ -1,4 +1,4 @@
-package game;
+package com.github.jarlah.scalagraphics;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

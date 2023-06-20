@@ -1,4 +1,4 @@
-package game;
+package com.github.jarlah.scalagraphics;
 
 public enum GameKey {
     UP,

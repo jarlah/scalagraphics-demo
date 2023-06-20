@@ -1,8 +1,13 @@
-package game
+package com.github.jarlah.scalagraphics
 
-import com.github.jarlah.scalagraphics.GraphicsOp
-import com.github.jarlah.scalagraphics.GraphicsIOWrapper
+import com.github.jarlah.scalagraphics.{
+  AssetManager,
+  GameKeyManager,
+  GraphicsIOWrapper,
+  GraphicsOp
+}
 import com.github.jarlah.scalagraphics.GraphicsOp.*
+
 import java.awt.event.{
   ComponentAdapter,
   ComponentEvent,

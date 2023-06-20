@@ -1,4 +1,4 @@
-package game;
+package com.github.jarlah.scalagraphics;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

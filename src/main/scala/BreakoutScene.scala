@@ -1,6 +1,11 @@
-package game
+package com.github.jarlah.scalagraphics
 
-import com.github.jarlah.scalagraphics.GraphicsOp
+import com.github.jarlah.scalagraphics.{
+  AssetManager,
+  GameKey,
+  GameKeyManager,
+  GraphicsOp
+}
 import com.github.jarlah.scalagraphics.GraphicsOp.*
 
 import java.awt.{Color, Dimension}

@@ -1,10 +1,9 @@
-package game
+package com.github.jarlah.scalagraphics
 
+import BreakoutScene.{Ball, Paddle}
 import org.scalatest.funsuite.AnyFunSuite
 
 class BallSpec extends AnyFunSuite {
-
-  import BreakoutScene._
 
   test("Ball intersects with a rectangle when it should") {
     val ball = Ball(50, 50, 10, 0, 0, moving = false)

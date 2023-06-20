@@ -1,4 +1,4 @@
-package game
+package com.github.jarlah.scalagraphics
 
 import com.github.jarlah.scalagraphics.GraphicsIOWrapper
 import org.scalatest.funsuite.AnyFunSuite

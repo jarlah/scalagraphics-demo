@@ -1,6 +1,6 @@
-package game
+package com.github.jarlah.scalagraphics
 
-import game.BreakoutScene.RectangularShape
+import BreakoutScene.RectangularShape
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 

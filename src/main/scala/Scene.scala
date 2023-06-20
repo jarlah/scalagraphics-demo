@@ -1,7 +1,14 @@
-package game
-import com.github.jarlah.scalagraphics.GraphicsOp
+package com.github.jarlah.scalagraphics
 
-import java.awt.event.{ComponentEvent, ComponentListener, KeyAdapter, KeyEvent, KeyListener}
+import com.github.jarlah.scalagraphics.{GameKeyManager, GraphicsOp}
+
+import java.awt.event.{
+  ComponentEvent,
+  ComponentListener,
+  KeyAdapter,
+  KeyEvent,
+  KeyListener
+}
 import java.awt.{Dimension, Graphics, Image}
 import java.util.{Timer, TimerTask}
 

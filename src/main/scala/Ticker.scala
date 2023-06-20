@@ -1,4 +1,4 @@
-package game
+package com.github.jarlah.scalagraphics
 
 object Ticker {
   private val NS_PER_UPDATE = 1000000000d / 60
