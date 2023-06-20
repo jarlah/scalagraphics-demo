@@ -15,6 +15,7 @@ object BreakoutScene {
   trait RectangularShape extends Position {
     val width: Double
     val height: Double
+    val backgroundColor: Color
 
     def left: Double = x
     def right: Double = x + width
@@ -27,8 +28,14 @@ object BreakoutScene {
       true
     }
 
-    def render: GraphicsOp[Unit] =
-      drawRect(x.toInt, y.toInt, width.toInt, height.toInt)
+    def render: GraphicsOp[Unit] = {
+      for {
+        previousColor <- getColor
+        _ <- setColor(backgroundColor)
+        _ <- drawRect(x.toInt, y.toInt, width.toInt, height.toInt)
+        _ <- setColor(previousColor)
+      } yield ()
+    }
   }
 
   case class Paddle(
@@ -36,7 +43,8 @@ object BreakoutScene {
       y: Double,
       width: Double,
       height: Double,
-      speed: Double
+      speed: Double,
+      backgroundColor: Color = Color.ORANGE
   ) extends RectangularShape
 
   case class Ball(
@@ -46,7 +54,8 @@ object BreakoutScene {
       speedX: Double,
       speedY: Double,
       moving: Boolean,
-      started: Boolean = false
+      started: Boolean = false,
+      backgroundColor: Color = Color.RED
   ) extends RectangularShape {
     override val width: Double = radius * 2
     override val height: Double = radius * 2
@@ -57,8 +66,19 @@ object BreakoutScene {
     override def top: Double = y - radius
     override def bottom: Double = y + radius
 
-    override def render: GraphicsOp[Unit] =
-      drawOval((x - radius).toInt, (y - radius).toInt, radius * 2, radius * 2)
+    override def render: GraphicsOp[Unit] = {
+      for {
+        previousColor <- getColor
+        _ <- setColor(backgroundColor)
+        _ <- drawOval(
+          (x - radius).toInt,
+          (y - radius).toInt,
+          radius * 2,
+          radius * 2
+        )
+        _ <- setColor(previousColor)
+      } yield ()
+    }
   }
 
   case class Brick(
@@ -66,14 +86,16 @@ object BreakoutScene {
       y: Double,
       width: Double,
       height: Double,
-      visible: Boolean
+      visible: Boolean,
+      backgroundColor: Color = Color.BLUE
   ) extends RectangularShape
 
   case class Wall(
       x: Double,
       y: Double,
       width: Double,
-      height: Double
+      height: Double,
+      backgroundColor: Color = Color.WHITE
   ) extends RectangularShape
 }
 
@@ -108,7 +130,6 @@ case class BreakoutScene(
 
   override def render: GraphicsOp[Unit] = for {
     _ <- clearRect(0, 0, sceneUtils.width, sceneUtils.height)
-    _ <- setColor(Color.BLACK)
     _ <- paddle.render
     _ <- ball.render
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
