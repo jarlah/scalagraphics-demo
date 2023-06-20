@@ -128,8 +128,15 @@ case class BreakoutScene(
     bricks(i)(j) = bricks(i)(j).copy(x = i * 80, y = j * 20)
   }
 
+  def renderBackground = for {
+    previousColor <- getColor
+    _ <- setColor(Color.DARK_GRAY)
+    _ <- fillRect(0, 0, sceneUtils.width, sceneUtils.height)
+    _ <- setColor(previousColor)
+  } yield ()
+
   override def render: GraphicsOp[Unit] = for {
-    _ <- clearRect(0, 0, sceneUtils.width, sceneUtils.height)
+    _ <- renderBackground
     _ <- paddle.render
     _ <- ball.render
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
