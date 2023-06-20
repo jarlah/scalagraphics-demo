@@ -1,5 +1,7 @@
 package game
 
+import game.GraphicsOp.{clearRect, drawOval, drawRect, setColor}
+
 import java.awt.Color
 import java.util.Timer
 
@@ -23,6 +25,9 @@ object BreakoutScene {
       if (this.bottom < other.top || this.top > other.bottom) return false
       true
     }
+
+    def render: GraphicsOp[Unit] =
+      drawRect(x.toInt, y.toInt, width.toInt, height.toInt)
   }
 
   case class Paddle(
@@ -31,12 +36,7 @@ object BreakoutScene {
       width: Double,
       height: Double,
       speed: Double
-  ) extends Position
-      with RectangularShape {
-
-    def render: GraphicsOp[Unit] =
-      drawRect(x.toInt, y.toInt, width.toInt, height.toInt)
-  }
+  ) extends RectangularShape
 
   case class Ball(
       x: Double,
@@ -44,9 +44,9 @@ object BreakoutScene {
       radius: Int,
       speedX: Double,
       speedY: Double,
-      moving: Boolean
-  ) extends Position
-      with RectangularShape {
+      moving: Boolean,
+      started: Boolean = false
+  ) extends RectangularShape {
     override val width: Double = radius * 2
     override val height: Double = radius * 2
 
@@ -56,7 +56,7 @@ object BreakoutScene {
     override def top: Double = y - radius
     override def bottom: Double = y + radius
 
-    def render: GraphicsOp[Unit] =
+    override def render: GraphicsOp[Unit] =
       drawOval((x - radius).toInt, (y - radius).toInt, radius * 2, radius * 2)
   }
 
@@ -66,12 +66,14 @@ object BreakoutScene {
       width: Double,
       height: Double,
       visible: Boolean
-  ) extends Position
-      with RectangularShape {
+  ) extends RectangularShape
 
-    def render: GraphicsOp[Unit] =
-      drawRect(x.toInt, y.toInt, width.toInt, height.toInt)
-  }
+  case class Wall(
+      x: Double,
+      y: Double,
+      width: Double,
+      height: Double
+  ) extends RectangularShape
 }
 
 case class BreakoutScene(
@@ -84,10 +86,13 @@ case class BreakoutScene(
 
   val timer = new Timer()
 
-  var paddle: Paddle =
-    Paddle(sceneUtils.width / 2 - 80 / 2, sceneUtils.height - 50, 80, 10, 5)
-  var ball: Ball =
-    Ball(paddle.x + paddle.width / 2, paddle.y - 10, 5, 3, -3, false)
+  var leftWall = Wall(0, 0, 1, sceneUtils.height)
+  var rightWall = Wall(sceneUtils.width - 1, 0, 1, sceneUtils.height)
+  var topWall = Wall(0, 0, sceneUtils.width, 1)
+  var bottomWall =
+    Wall(0, sceneUtils.height + 1, sceneUtils.width, 1)
+  var paddle = createNewPaddle()
+  var ball = createNewBall(paddle)
   var bricks: Array[Array[Brick]] = Array.fill(10, 5)(
     Brick(0, 0, 80, 20, true)
   ) // 10 columns and 5 rows of bricks
@@ -114,6 +119,7 @@ case class BreakoutScene(
 
     if (keyManager.isKeyJustPressed(GameKey.SPACE)) {
       ball = ball.copy(moving = !ball.moving)
+      if (!ball.started) ball = ball.copy(started = true)
     }
 
     // if ball is not moving, do nothing
@@ -138,13 +144,13 @@ case class BreakoutScene(
     )
 
     // Handle ball-wall collision
-    if (ball.x - ball.radius < 0 || ball.x + ball.radius > sceneUtils.width) {
+    if (ball.intersects(leftWall) || ball.intersects(rightWall)) {
       ball = ball.copy(
         x = oldBall.x, // revert x
         speedX = -ball.speedX
       )
     }
-    if (ball.y - ball.radius < 0 || ball.y + ball.radius > sceneUtils.height) {
+    if (ball.intersects(topWall)) {
       ball = ball.copy(
         y = oldBall.y, // revert y
         speedY = -ball.speedY
@@ -175,18 +181,45 @@ case class BreakoutScene(
       }
     })
 
-    // Handle ball going out of bounds
-    if (ball.y + ball.radius * 2 > sceneUtils.height) {
-      paddle = Paddle(
-        sceneUtils.width / 2 - paddle.width / 2,
-        sceneUtils.height - 50,
-        80,
-        10,
-        5
-      )
-      ball = Ball(paddle.x + paddle.width / 2, paddle.y - 10, 5, 3, -3, false)
+    // Handle ball hitting flor
+    if (ball.intersects(bottomWall)) {
+      paddle = createNewPaddle()
+      ball = createNewBall(paddle)
     }
   }
+
+  private def createNewPaddle(
+      width: Double = 80,
+      height: Double = 10,
+      speed: Double = 5,
+      heightOffset: Double = 50
+  ) = {
+    Paddle(
+      sceneUtils.width / 2 - width / 2,
+      sceneUtils.height - heightOffset,
+      width,
+      height,
+      speed
+    )
+  }
+
+  private def createNewBall(
+      paddle: RectangularShape,
+      heightOffset: Double = 10,
+      radius: Int = 5,
+      speedX: Double = 3,
+      speedY: Double = -3,
+      moving: Boolean = false,
+      started: Boolean = false
+  ) =
+    Ball(
+      paddle.x + paddle.width / 2,
+      paddle.y - heightOffset,
+      radius,
+      speedX,
+      speedY,
+      moving
+    )
 
   override def onResize(newWidth: Int, newHeight: Int): Unit = ()
 

@@ -1,6 +1,13 @@
 package game
 
-import java.awt.event.{ComponentAdapter, ComponentEvent, ComponentListener, KeyListener}
+import game.GraphicsOp.drawString
+
+import java.awt.event.{
+  ComponentAdapter,
+  ComponentEvent,
+  ComponentListener,
+  KeyListener
+}
 import java.awt.{Dimension, Graphics2D, Image}
 import javax.swing.{ImageIcon, JFrame, WindowConstants}
 

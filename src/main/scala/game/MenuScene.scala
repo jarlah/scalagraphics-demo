@@ -1,5 +1,7 @@
 package game
 
+import game.GraphicsOp.{drawImage, drawString}
+
 import java.awt.{Dimension, Image}
 
 case class MenuScene(
