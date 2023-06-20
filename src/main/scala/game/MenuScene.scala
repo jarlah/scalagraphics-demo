@@ -1,6 +1,7 @@
 package game
 
-import com.github.jarlah.scalagraphics.{GraphicsOp, drawImage, drawString}
+import com.github.jarlah.scalagraphics.GraphicsOp
+import com.github.jarlah.scalagraphics.GraphicsOp.*
 
 import java.awt.{Dimension, Image}
 

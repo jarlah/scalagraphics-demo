@@ -1,7 +1,8 @@
 package game
 
-import com.github.jarlah.scalagraphics.{GraphicsIOWrapper, drawString}
-
+import com.github.jarlah.scalagraphics.GraphicsOp
+import com.github.jarlah.scalagraphics.GraphicsIOWrapper
+import com.github.jarlah.scalagraphics.GraphicsOp.*
 import java.awt.event.{
   ComponentAdapter,
   ComponentEvent,
@@ -44,7 +45,7 @@ def render(frame: JFrame, sceneManager: SceneManager): Ticker => Unit =
         10,
         sceneManager.height - 10
       )
-    } yield ()).run(GraphicsIOWrapper.unsafeApply(g))
+    } yield ()).run(GraphicsIOWrapper(g))
     g.dispose()
     bs.show()
   }

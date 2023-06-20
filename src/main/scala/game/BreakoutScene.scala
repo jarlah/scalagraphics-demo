@@ -1,6 +1,7 @@
 package game
 
-import com.github.jarlah.scalagraphics.{GraphicsOp, clearRect, drawOval, drawRect, setColor}
+import com.github.jarlah.scalagraphics.GraphicsOp
+import com.github.jarlah.scalagraphics.GraphicsOp.*
 
 import java.awt.Color
 import java.util.Timer
