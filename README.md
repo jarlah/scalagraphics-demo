@@ -2,11 +2,11 @@
 
 This project will contain multiple games/demos to showcase how the Scala Graphics library (https://github.com/jarlah/scalagraphics) can be used.
 
-Current playable game is a simple Breakout game:
+Current state of the game:
 
-![image](https://github.com/jarlah/scalagraphics-demo/assets/404102/d793f84a-8ff1-4110-85ea-588c4083c979)
-
-Which for obvious reasons (not being made by a designer) looks like a heap of donkeys kidneys :trollface:
+![Screenshot from 2023-06-20 21-40-20](https://github.com/jarlah/scalagraphics-demo/assets/404102/edc8890e-ac16-481d-a347-bb65930b1433)
+![Screenshot from 2023-06-20 21-40-27](https://github.com/jarlah/scalagraphics-demo/assets/404102/64641d62-2cf9-48b3-8105-10faa085b16f)
+![Screenshot from 2023-06-20 21-40-39](https://github.com/jarlah/scalagraphics-demo/assets/404102/d9707a17-0d93-4a3e-8bbb-fbfcb7b21054)
 
 ## Current release process
 
