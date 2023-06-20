@@ -44,7 +44,7 @@ def render(frame: JFrame, sceneManager: SceneManager): Ticker => Unit =
         10,
         sceneManager.height - 10
       )
-    } yield ()).run(GraphicsIOWrapper.unsafeApply(g))
+    } yield ()).run(new GraphicsIOWrapper(g))
     g.dispose()
     bs.show()
   }

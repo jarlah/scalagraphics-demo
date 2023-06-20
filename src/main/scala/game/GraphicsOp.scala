@@ -98,17 +98,10 @@ trait GraphicsIO extends Graphics {
   def translate(tx: Double, ty: Double): Unit
 }
 
-object GraphicsIOWrapper {
-  def unsafeApply(graphics: Graphics): GraphicsIOWrapper = {
-    graphics match {
-      case g: Graphics2D => GraphicsIOWrapper(g)
-      case _ =>
-        throw new IllegalArgumentException(s"Graphics object is not Graphics2D")
-    }
-  }
-}
-
 class GraphicsIOWrapper(g: Graphics2D) extends GraphicsIO {
+  def this(graphics: Graphics) =
+    this(graphics.asInstanceOf[Graphics2D])
+
   override def drawImage(img: Image, x: Int, y: Int): Boolean =
     g.drawImage(img, x, y, null)
 
