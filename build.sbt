@@ -12,4 +12,4 @@ resolvers += "GitHub Package Registry" at "https://maven.pkg.github.com/jarlah/s
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.16"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % "test"
 libraryDependencies += "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % "test"
-libraryDependencies += "scalagraphics" % "scalagraphics_3" % "0.2.0"
+libraryDependencies += "com.github.jarlah.scalagraphics" % "scalagraphics_3" % "0.2.0"
