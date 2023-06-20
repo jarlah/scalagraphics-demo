@@ -1,12 +1,6 @@
 package com.github.jarlah.scalagraphics
 
-import com.github.jarlah.scalagraphics.{
-  AssetManager,
-  GameKey,
-  GameKeyManager,
-  GraphicsOp
-}
-import com.github.jarlah.scalagraphics.GraphicsOp.*
+import GraphicsOp.*
 
 import java.awt.{Color, Dimension}
 import java.util.Timer
@@ -138,12 +132,17 @@ case class BreakoutScene(
   }
 
   override def render: GraphicsOp[Unit] = for {
-    _ <- drawImage(background, 0, 0)
+    previousColor <- getColor
+    previousFont <- getFont
+    _ <- setColor(Color.DARK_GRAY)
+    _ <- fillRect(0, 0, sceneUtils.width, sceneUtils.height)
     _ <- paddle.render
     _ <- ball.render
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
       acc.flatMap(_ => brick.render)
     }
+    _ <- setFont(previousFont)
+    _ <- setColor(previousColor)
   } yield ()
 
   def update(delta: Double): Unit = {

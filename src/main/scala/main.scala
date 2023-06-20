@@ -1,12 +1,6 @@
 package com.github.jarlah.scalagraphics
 
-import com.github.jarlah.scalagraphics.{
-  AssetManager,
-  GameKeyManager,
-  GraphicsIOWrapper,
-  GraphicsOp
-}
-import com.github.jarlah.scalagraphics.GraphicsOp.*
+import GraphicsOp.*
 
 import java.awt.event.{
   ComponentAdapter,
@@ -26,7 +20,9 @@ def main(): Unit = {
   val keyManager = new GameKeyManager
   val sceneManager = SceneManager(keyManager, width, height)
 
-  sceneManager.setScene(BreakoutScene(assetManager, keyManager, sceneManager))
+  sceneManager.setScene(
+    MenuScene(assetManager, keyManager, sceneManager)
+  )
 
   val frame = createGameWindow(sceneManager, width, height)
   val ticker = new Ticker(
