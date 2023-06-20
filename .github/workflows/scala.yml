@@ -29,3 +29,6 @@ jobs:
         cache: 'sbt'
     - name: Run tests
       run: sbt test
+      env:
+        GH_USERNAME: ${{ secrets.GH_USERNAME }}
+        GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
