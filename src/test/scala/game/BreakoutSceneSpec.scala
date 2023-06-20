@@ -1,5 +1,6 @@
 package game
 
+import com.github.jarlah.scalagraphics.GraphicsIOWrapper
 import org.scalatest.funsuite.AnyFunSuite
 import org.mockito.Mockito.*
 import org.mockito.ArgumentMatchers.*
