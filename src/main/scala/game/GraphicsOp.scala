@@ -687,4 +687,158 @@ object GraphicsOp {
   def dispose(): GraphicsOp[Unit] =
     liftIO(_.dispose())
 
+  def drawImage(
+      img: Image,
+      xform: AffineTransform,
+      obs: ImageObserver
+  ): GraphicsOp[Boolean] = liftIO(_.drawImage(img, xform, obs))
+
+  def drawImage(
+      img: BufferedImage,
+      op: BufferedImageOp,
+      x: Int,
+      y: Int
+  ): GraphicsOp[Unit] = liftIO(_.drawImage(img, op, x, y))
+
+  def addRenderingHints(hints: Map[RenderingHints.Key, _]): GraphicsOp[Unit] =
+    liftIO(
+      _.addRenderingHints(hints)
+    )
+
+  def clip(s: Shape): GraphicsOp[Unit] = liftIO(_.clip(s))
+
+  def draw(s: Shape): GraphicsOp[Unit] = liftIO(_.draw(s))
+
+  def drawGlyphVector(g: GlyphVector, x: Float, y: Float): GraphicsOp[Unit] =
+    liftIO(_.drawGlyphVector(g, x, y))
+
+  def drawRenderableImage(
+      img: RenderableImage,
+      xform: AffineTransform
+  ): GraphicsOp[Unit] = liftIO(_.drawRenderableImage(img, xform))
+
+  def drawRenderedImage(
+      img: RenderedImage,
+      xform: AffineTransform
+  ): GraphicsOp[Unit] = liftIO(_.drawRenderedImage(img, xform))
+
+  def getBackground: GraphicsOp[Color] = liftIO(_.getBackground)
+
+  def getComposite: GraphicsOp[Composite] = liftIO(_.getComposite)
+
+  def getFontRenderContext: GraphicsOp[FontRenderContext] = liftIO(
+    _.getFontRenderContext
+  )
+
+  def getPaint: GraphicsOp[Paint] = liftIO(_.getPaint)
+
+  def getRenderingHint(hintKey: RenderingHints.Key): GraphicsOp[Object] =
+    liftIO(
+      _.getRenderingHint(hintKey)
+    )
+
+  def getRenderingHints: GraphicsOp[RenderingHints] = liftIO(
+    _.getRenderingHints
+  )
+
+  def getStroke: GraphicsOp[Stroke] = liftIO(_.getStroke)
+
+  def getTransform: GraphicsOp[AffineTransform] = liftIO(_.getTransform)
+
+  def setBackground(color: Color): GraphicsOp[Unit] = liftIO(
+    _.setBackground(color)
+  )
+
+  def setComposite(comp: AlphaComposite): GraphicsOp[Unit] = liftIO(
+    _.setComposite(comp)
+  )
+
+  def setPaint(paint: Paint): GraphicsOp[Unit] = liftIO(_.setPaint(paint))
+
+  def setRenderingHint(
+      hintKey: RenderingHints.Key,
+      hintValue: Object
+  ): GraphicsOp[Unit] =
+    liftIO(_.setRenderingHint(hintKey, hintValue))
+
+  def setRenderingHints(hints: Map[_, _]): GraphicsOp[Unit] = liftIO(
+    _.setRenderingHints(hints)
+  )
+
+  def setStroke(s: Stroke): GraphicsOp[Unit] = liftIO(_.setStroke(s))
+
+  def setTransform(Tx: AffineTransform): GraphicsOp[Unit] = liftIO(
+    _.setTransform(Tx)
+  )
+
+  def shear(shx: Double, shy: Double): GraphicsOp[Unit] = liftIO(
+    _.shear(shx, shy)
+  )
+
+  def rotate(theta: Double): GraphicsOp[Unit] = liftIO(_.rotate(theta))
+
+  def rotate(theta: Double, x: Double, y: Double): GraphicsOp[Unit] = liftIO(
+    _.rotate(theta, x, y)
+  )
+
+  def hit(rect: Rectangle, s: Shape, onStroke: Boolean): GraphicsOp[Boolean] =
+    liftIO(_.hit(rect, s, onStroke))
+
+  def scale(sx: Double, sy: Double): GraphicsOp[Unit] = liftIO(
+    _.scale(sx, sy)
+  )
+
+  def fill(s: Shape): GraphicsOp[Unit] = liftIO(_.fill(s))
+
+  def transform(Tx: AffineTransform): GraphicsOp[Unit] = liftIO(
+    _.transform(Tx)
+  )
+
+  def draw3DRect(
+      x: Int,
+      y: Int,
+      width: Int,
+      height: Int,
+      raise: Boolean
+  ): GraphicsOp[Unit] = liftIO(
+    _.draw3DRect(x, y, width, height, raise)
+  )
+
+  def fill3DRect(
+      x: Int,
+      y: Int,
+      width: Int,
+      height: Int,
+      raise: Boolean
+  ): GraphicsOp[Unit] = liftIO(
+    _.fill3DRect(x, y, width, height, raise)
+  )
+
+  def drawChars(
+      data: Array[Char],
+      offset: Int,
+      length: Int,
+      x: Int,
+      y: Int
+  ): GraphicsOp[Unit] = liftIO(
+    _.drawChars(data, offset, length, x, y)
+  )
+
+  def drawBytes(
+      data: Array[Byte],
+      offset: Int,
+      length: Int,
+      x: Int,
+      y: Int
+  ): GraphicsOp[Unit] = liftIO(
+    _.drawBytes(data, offset, length, x, y)
+  )
+
+  @deprecated
+  def getClipRect: GraphicsOp[Rectangle] = liftIO(
+    _.getClipRect
+  )
+
+  def hitClip(x: Int, y: Int, width: Int, height: Int): GraphicsOp[Boolean] =
+    liftIO(_.hitClip(x, y, width, height))
 }
