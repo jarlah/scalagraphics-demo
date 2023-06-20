@@ -4,6 +4,8 @@ import game.BreakoutScene.RectangularShape
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
+import java.awt.Color
+
 class RectangularShapeSpec extends AnyFlatSpec with Matchers {
 
   "A RectangularShape" should "detect intersection with another RectangularShape correctly" in {
@@ -13,6 +15,7 @@ class RectangularShapeSpec extends AnyFlatSpec with Matchers {
       val y = 0.0
       val width = 5.0
       val height = 5.0
+      val backgroundColor = Color.RED
     }
 
     val shape2 = new RectangularShape {
@@ -20,6 +23,7 @@ class RectangularShapeSpec extends AnyFlatSpec with Matchers {
       val y = 4.0
       val width = 5.0
       val height = 5.0
+      val backgroundColor = Color.RED
     }
 
     shape1.intersects(shape2) should be(true)
@@ -32,6 +36,7 @@ class RectangularShapeSpec extends AnyFlatSpec with Matchers {
       val y = 0.0
       val width = 5.0
       val height = 5.0
+      val backgroundColor = Color.RED
     }
 
     val shape2 = new RectangularShape {
@@ -39,6 +44,7 @@ class RectangularShapeSpec extends AnyFlatSpec with Matchers {
       val y = 6.0
       val width = 5.0
       val height = 5.0
+      val backgroundColor = Color.RED
     }
 
     shape1.intersects(shape2) should be(false)
