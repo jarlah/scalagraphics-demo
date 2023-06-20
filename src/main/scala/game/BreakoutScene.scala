@@ -109,6 +109,10 @@ case class BreakoutScene(
 
   val timer = new Timer()
 
+  val background = assetManager.getScaledImage(
+    "welcome.jpeg",
+    new Dimension(sceneUtils.width, sceneUtils.height)
+  )
   var leftWall = Wall(0, 0, 1, sceneUtils.height)
   var rightWall = Wall(sceneUtils.width - 1, 0, 1, sceneUtils.height)
   var topWall = Wall(0, 0, sceneUtils.width, 1)
@@ -128,16 +132,8 @@ case class BreakoutScene(
     bricks(i)(j) = bricks(i)(j).copy(x = i * 80, y = j * 20)
   }
 
-  def renderBackground = {
-    val background = assetManager.getScaledImage(
-      "welcome.jpeg",
-      new Dimension(sceneUtils.width, sceneUtils.height)
-    )
-    drawImage(background, 0, 0)
-  }
-
   override def render: GraphicsOp[Unit] = for {
-    _ <- renderBackground
+    _ <- drawImage(background, 0, 0)
     _ <- paddle.render
     _ <- ball.render
     _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
