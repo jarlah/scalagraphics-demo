@@ -5,16 +5,17 @@ import GraphicsOp.*
 import java.awt.event.{ComponentAdapter, ComponentEvent, ComponentListener, KeyListener}
 import java.awt.{Color, Dimension, Graphics2D, Image}
 import javax.swing.{ImageIcon, JFrame, WindowConstants}
+import scala.util.Try
 
 val width = 800
 val height = 600
 
-def convertColor(previousColor: Color) = {
+def convertColor(previousColor: Color): GraphicsIO.Color = {
   new GraphicsIO.Color {
-    override val r: Float = previousColor.getRed / 255f
-    override val g: Float = previousColor.getGreen / 255f
-    override val b: Float = previousColor.getBlue / 255f
-    override val a: Float = previousColor.getAlpha / 255f
+    override val r: Float = Try(previousColor.getRed).map(_ / 255f).getOrElse(0f)
+    override val g: Float = Try(previousColor.getGreen).map(_ / 255f).getOrElse(0f)
+    override val b: Float = Try(previousColor.getBlue).map(_ / 255f).getOrElse(0f)
+    override val a: Float = Try(previousColor.getAlpha).map(_ / 255f).getOrElse(0f)
   }
 }
 
