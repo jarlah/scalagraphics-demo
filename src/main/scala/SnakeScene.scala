@@ -122,14 +122,14 @@ case class SnakeScene(
     for {
       previousColor <- getColor
       // Clear the screen
-      _ <- setColor(Color.DARK_GRAY)
+      _ <- setColor(convertColor(Color.DARK_GRAY))
       _ <- fillRect(0, 0, sceneUtils.width, sceneUtils.height)
       // Conditionally draw game over string
       _ <-
         if (gameOver) {
           for {
             previousFont <- getFont
-            _ <- setColor(gameOverColor)
+            _ <- setColor(convertColor(gameOverColor))
             _ <- setFont(gameOverFont)
             fontMetrics <- getFontMetrics(gameOverFont)
             _ <- {
@@ -148,7 +148,7 @@ case class SnakeScene(
         if (!gameOver && gamePaused) {
           for {
             previousFont <- getFont
-            _ <- setColor(gamePausedColor)
+            _ <- setColor(convertColor(gamePausedColor))
             _ <- setFont(gamePausedFont)
             fontMetrics <- getFontMetrics(gamePausedFont)
             _ <- {
@@ -165,12 +165,12 @@ case class SnakeScene(
         }
       previousFont <- getFont
       // Display the score
-      _ <- setColor(scoreColor)
+      _ <- setColor(convertColor(scoreColor))
       _ <- setFont(scoreFont)
       _ <- drawString(s"Score: $score", 10, 20)
       _ <- setFont(previousFont)
       // Display the speed
-      _ <- setColor(speedColor)
+      _ <- setColor(convertColor(speedColor))
       _ <- setFont(speedFont)
       _ <- drawString(
         f"Speed: ${1000.0 / moveInterval}%.1f px/s",
@@ -180,13 +180,13 @@ case class SnakeScene(
       // Revert the font
       _ <- setFont(previousFont)
       // Draw the snake
-      _ <- setColor(Color.GREEN)
+      _ <- setColor(convertColor(Color.GREEN))
       _ <- snake.points.foldLeft(pure(())) { case (acc, Point(x, y)) =>
         acc.flatMap(_ =>
           fillRect(x * gridSize, y * gridSize, gridSize, gridSize)
         )
       }
-      _ <- setColor(Color.RED)
+      _ <- setColor(convertColor(Color.RED))
       // Draw the apple
       _ <- fillRect(
         apple._1 * gridSize,
@@ -195,7 +195,7 @@ case class SnakeScene(
         gridSize
       )
       // Revert the color
-      _ <- setColor(previousColor)
+      _ <- setColor(convertColor(previousColor))
     } yield ()
   }
 

@@ -2,17 +2,21 @@ package com.github.jarlah.scalagraphics
 
 import GraphicsOp.*
 
-import java.awt.event.{
-  ComponentAdapter,
-  ComponentEvent,
-  ComponentListener,
-  KeyListener
-}
-import java.awt.{Dimension, Graphics2D, Image}
+import java.awt.event.{ComponentAdapter, ComponentEvent, ComponentListener, KeyListener}
+import java.awt.{Color, Dimension, Graphics2D, Image}
 import javax.swing.{ImageIcon, JFrame, WindowConstants}
 
 val width = 800
 val height = 600
+
+def convertColor(previousColor: Color) = {
+  new GraphicsIO.Color {
+    override val r: Float = previousColor.getRed / 255f
+    override val g: Float = previousColor.getGreen / 255f
+    override val b: Float = previousColor.getBlue / 255f
+    override val a: Float = previousColor.getAlpha / 255f
+  }
+}
 
 @main
 def main(): Unit = {
@@ -46,7 +50,7 @@ def render(frame: JFrame, sceneManager: SceneManager): Ticker => Unit =
         10,
         sceneManager.height - 10
       )
-    } yield ()).run(GraphicsIOWrapper(g))
+    } yield ()).run(Java2DGraphicsIO(g))
     g.dispose()
     bs.show()
   }
