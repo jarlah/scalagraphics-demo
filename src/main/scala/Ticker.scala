@@ -1,5 +1,7 @@
 package com.github.jarlah.scalagraphics
 
+import scala.util.Try
+
 object Ticker {
   private val NS_PER_UPDATE = 1000000000d / 60
 }
@@ -20,17 +22,13 @@ class Ticker(update: Double => Unit, render: Ticker => Unit) extends Runnable {
 
   override def run(): Unit = {
     var lastTime = System.nanoTime
-    var delta: Double = 0
     var timer = System.currentTimeMillis
     var frames = 0
     while (running) {
       val now = System.nanoTime
-      delta += (now - lastTime) / Ticker.NS_PER_UPDATE
+      val delta = (now - lastTime) / Ticker.NS_PER_UPDATE
       lastTime = now
-      while (delta >= 1) {
-        update(delta)
-        delta -= 1
-      }
+      update(delta)
       if (running) {
         render(this)
       }
@@ -40,6 +38,8 @@ class Ticker(update: Double => Unit, render: Ticker => Unit) extends Runnable {
         fps = frames
         frames = 0
       }
+      // Sleep for a bit to reduce CPU usage
+      Try(Thread.sleep(1))
     }
   }
 
