@@ -42,14 +42,17 @@ case class Snake(points: List[Point], direction: String) {
 case class SnakeScene(
     assetManager: AssetManager,
     gameKeyManager: GameKeyManager,
-    sceneUtils: SceneUtils,
-    private var snake: Snake = Snake(List(Point(10, 10)), "RIGHT"),
-    private var apple: Point = Point(20, 20),
-    private var timeSinceLastMove: Double = 0.0,
-    private var moveInterval: Double = 30.0,
-    private var gameOver: Boolean = false,
-    private var gamePaused: Boolean = false
+    sceneUtils: SceneUtils
 ) extends Scene {
+
+  private var snake: Snake = Snake(List(Point(10, 10)), "RIGHT")
+  private var apple: Point = Point(20, 20)
+
+  private var timeSinceLastMove: Double = 0.0
+  private var moveInterval: Double = 20.0
+
+  private var gameOver: Boolean = false
+  private var gamePaused: Boolean = false
 
   private val gridSize = 10
   private val gridWidth = sceneUtils.width / gridSize
@@ -180,12 +183,12 @@ case class SnakeScene(
       _ <- setColor(Color.GREEN)
       _ <- snake.points.foldLeft(pure(())) { case (acc, Point(x, y)) =>
         acc.flatMap(_ =>
-          drawRect(x * gridSize, y * gridSize, gridSize, gridSize)
+          fillRect(x * gridSize, y * gridSize, gridSize, gridSize)
         )
       }
       _ <- setColor(Color.RED)
       // Draw the apple
-      _ <- drawRect(
+      _ <- fillRect(
         apple._1 * gridSize,
         apple._2 * gridSize,
         gridSize,

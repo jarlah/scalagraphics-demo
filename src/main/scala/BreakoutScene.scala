@@ -15,6 +15,7 @@ object BreakoutScene {
     val width: Double
     val height: Double
     val backgroundColor: Color
+    val fill: Boolean = false
 
     def left: Double = x
     def right: Double = x + width
@@ -31,7 +32,15 @@ object BreakoutScene {
       for {
         previousColor <- getColor
         _ <- setColor(backgroundColor)
-        _ <- drawRect(x.toInt, y.toInt, width.toInt, height.toInt)
+        _ <-
+          if (fill) fillRect(x.toInt, y.toInt, width.toInt, height.toInt)
+          else
+            drawRect(
+              x.toInt,
+              y.toInt,
+              width.toInt,
+              height.toInt
+            )
         _ <- setColor(previousColor)
       } yield ()
     }
@@ -44,7 +53,9 @@ object BreakoutScene {
       height: Double,
       speed: Double,
       backgroundColor: Color = Color.ORANGE
-  ) extends RectangularShape
+  ) extends RectangularShape {
+    override val fill: Boolean = true
+  }
 
   case class Ball(
       x: Double,
@@ -69,7 +80,7 @@ object BreakoutScene {
       for {
         previousColor <- getColor
         _ <- setColor(backgroundColor)
-        _ <- drawOval(
+        _ <- fillOval(
           (x - radius).toInt,
           (y - radius).toInt,
           radius * 2,
@@ -86,7 +97,7 @@ object BreakoutScene {
       width: Double,
       height: Double,
       visible: Boolean,
-      backgroundColor: Color = Color.BLUE
+      backgroundColor: Color = Color.WHITE
   ) extends RectangularShape
 
   case class Wall(
