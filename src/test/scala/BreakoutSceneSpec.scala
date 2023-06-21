@@ -134,6 +134,6 @@ class BreakoutSceneSpec extends AnyFunSuite {
     scene.render.run(graphicsWrapper)
 
     // Verify that drawOval was called with the correct parameters
-    verify(graphicsMock, times(1)).drawOval(90, 90, 20, 20)
+    verify(graphicsMock, times(1)).fillOval(90, 90, 20, 20)
   }
 }
