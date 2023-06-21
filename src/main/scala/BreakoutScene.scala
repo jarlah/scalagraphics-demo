@@ -158,7 +158,7 @@ case class BreakoutScene(
 
   def update(delta: Double): Unit = {
 
-    if (keyManager.isKeyJustPressed(GameKey.SPACE)) {
+    if (keyManager.isKeyJustPressed(GameKey.Space)) {
       ball = ball.copy(moving = !ball.moving)
       if (!ball.started) ball = ball.copy(started = true)
     }
@@ -167,11 +167,11 @@ case class BreakoutScene(
     if (!ball.moving) return;
 
     // Move paddle
-    if (keyManager.isKeyPressed(GameKey.LEFT)) {
+    if (keyManager.isKeyPressed(GameKey.Left)) {
       paddle = paddle.copy(x = (paddle.x - paddle.speed * delta).max(0))
     }
 
-    if (keyManager.isKeyPressed(GameKey.RIGHT)) {
+    if (keyManager.isKeyPressed(GameKey.Right)) {
       paddle = paddle.copy(x =
         (paddle.x + paddle.speed * delta).min(sceneUtils.width - paddle.width)
       )

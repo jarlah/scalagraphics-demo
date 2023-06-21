@@ -44,13 +44,13 @@ case class MenuScene(
   private var selectedIndex: Int = 0
 
   override def update(delta: Double): Unit = {
-    if (gameKeyManager.isKeyJustPressed(GameKey.UP)) {
+    if (gameKeyManager.isKeyJustPressed(GameKey.Up)) {
       selectedIndex = (selectedIndex - 1 + options.length) % options.length
     }
-    if (gameKeyManager.isKeyJustPressed(GameKey.DOWN)) {
+    if (gameKeyManager.isKeyJustPressed(GameKey.Down)) {
       selectedIndex = (selectedIndex + 1) % options.length
     }
-    if (gameKeyManager.isKeyJustPressed(GameKey.ENTER)) {
+    if (gameKeyManager.isKeyJustPressed(GameKey.Enter)) {
       val selectedOption = options(selectedIndex)
       sceneUtils.setScene(selectedOption.scene)
     }

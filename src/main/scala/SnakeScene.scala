@@ -76,18 +76,18 @@ case class SnakeScene(
   override def update(delta: Double): Unit = {
     if (gameOver) return;
 
-    if (gameKeyManager.isKeyJustPressed(GameKey.ESC))
+    if (gameKeyManager.isKeyJustPressed(GameKey.Escape))
       gamePaused = !gamePaused
 
     if (gamePaused) return;
 
-    if (gameKeyManager.isKeyPressed(GameKey.UP) && snake.direction != "DOWN")
+    if (gameKeyManager.isKeyPressed(GameKey.Up) && snake.direction != "DOWN")
       snake = snake.copy(direction = "UP")
-    if (gameKeyManager.isKeyPressed(GameKey.DOWN) && snake.direction != "UP")
+    if (gameKeyManager.isKeyPressed(GameKey.Down) && snake.direction != "UP")
       snake = snake.copy(direction = "DOWN")
-    if (gameKeyManager.isKeyPressed(GameKey.LEFT) && snake.direction != "RIGHT")
+    if (gameKeyManager.isKeyPressed(GameKey.Left) && snake.direction != "RIGHT")
       snake = snake.copy(direction = "LEFT")
-    if (gameKeyManager.isKeyPressed(GameKey.RIGHT) && snake.direction != "LEFT")
+    if (gameKeyManager.isKeyPressed(GameKey.Right) && snake.direction != "LEFT")
       snake = snake.copy(direction = "RIGHT")
 
     timeSinceLastMove += delta
