@@ -7,7 +7,8 @@ import scala.collection.mutable
 
 class GameKeyManager extends KeyListener {
 
-  private val keys = mutable.Map[GameKey, Boolean]().withDefaultValue(false)
+  private val keys =
+    mutable.Map[GameKey, Boolean]().withDefaultValue(false)
   private val justPressed =
     mutable.Map[GameKey, Boolean]().withDefaultValue(false)
   private val cantPress =
@@ -23,14 +24,13 @@ class GameKeyManager extends KeyListener {
     case KeyEvent.VK_SPACE  => GameKey.Space
     case _                  => null
   }
-  override def keyTyped(e: KeyEvent): Unit = {
+  override def keyTyped(e: KeyEvent): Unit = {}
 
-// Optional implementation
-  }
   override def keyPressed(e: KeyEvent): Unit = {
     val gameKey = convertToGameKey(e.getKeyCode)
     if (gameKey != null) keys.put(gameKey, true)
   }
+
   override def keyReleased(e: KeyEvent): Unit = {
     val gameKey = convertToGameKey(e.getKeyCode)
     if (gameKey != null) {
@@ -38,19 +38,21 @@ class GameKeyManager extends KeyListener {
       cantPress.put(gameKey, false)
     }
   }
+
   def update(): Unit = {
     for (key <- GameKey.values) {
-      if (cantPress.getOrElse(key, false) && !keys.getOrElse(key, false))
+      if (cantPress(key) && !keys(key))
         cantPress.put(key, false)
-      else if (justPressed.getOrElse(key, false)) {
+      else if (justPressed(key)) {
         cantPress.put(key, true)
         justPressed.put(key, false)
       }
-      if (!cantPress.getOrElse(key, false) && keys.getOrElse(key, false))
+      if (!cantPress(key) && keys(key))
         justPressed.put(key, true)
     }
   }
-  def isKeyPressed(key: GameKey): Boolean = keys.getOrElse(key, false)
-  def isKeyJustPressed(key: GameKey): Boolean =
-    justPressed.getOrElse(key, false)
+
+  def isKeyPressed(key: GameKey): Boolean = keys(key)
+
+  def isKeyJustPressed(key: GameKey): Boolean = justPressed(key)
 }
