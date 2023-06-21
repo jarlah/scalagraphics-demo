@@ -128,9 +128,10 @@ class BreakoutSceneSpec extends AnyFunSuite {
 
     // Create wrapper around the mock graphics object
     val graphicsWrapper = new Java2DGraphicsIO(graphicsMock)
+    when(graphicsMock.getColor).thenReturn(java.awt.Color.YELLOW)
 
     // Call render method
-    println(scene.render.run(graphicsWrapper))
+    assert(scene.render.run(graphicsWrapper).isRight)
 
     // Verify that drawOval was called with the correct parameters
     verify(graphicsMock, times(1)).fillOval(90, 90, 20, 20)

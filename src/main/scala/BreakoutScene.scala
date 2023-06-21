@@ -41,7 +41,7 @@ object BreakoutScene {
               width.toInt,
               height.toInt
             )
-        _ <- setColor(convertColor(previousColor))
+        _ <- setColor(previousColor)
       } yield ()
     }
   }
@@ -52,7 +52,7 @@ object BreakoutScene {
       width: Double,
       height: Double,
       speed: Double,
-      backgroundColor: GraphicsIO.Color = convertColor(Color.ORANGE)
+      backgroundColor: GraphicsIO.Color = GraphicsIO.Color.Orange
   ) extends RectangularShape {
     override val fill: Boolean = true
   }
@@ -65,7 +65,7 @@ object BreakoutScene {
       speedY: Double,
       moving: Boolean,
       started: Boolean = false,
-      backgroundColor: GraphicsIO.Color = convertColor(Color.RED)
+      backgroundColor: GraphicsIO.Color = GraphicsIO.Color.Red
   ) extends RectangularShape {
     override val width: Double = radius * 2
     override val height: Double = radius * 2
@@ -86,7 +86,7 @@ object BreakoutScene {
           radius * 2,
           radius * 2
         )
-        _ <- setColor(convertColor(previousColor))
+        _ <- setColor(previousColor)
       } yield ()
     }
   }
@@ -97,7 +97,7 @@ object BreakoutScene {
       width: Double,
       height: Double,
       visible: Boolean,
-      backgroundColor: GraphicsIO.Color = convertColor(Color.WHITE)
+      backgroundColor: GraphicsIO.Color = GraphicsIO.Color.White
   ) extends RectangularShape
 
   case class Wall(
@@ -105,7 +105,7 @@ object BreakoutScene {
       y: Double,
       width: Double,
       height: Double,
-      backgroundColor: GraphicsIO.Color = convertColor(Color.WHITE)
+      backgroundColor: GraphicsIO.Color = GraphicsIO.Color.White
   ) extends RectangularShape
 }
 
@@ -145,7 +145,7 @@ case class BreakoutScene(
   override def render: GraphicsOp[Unit] = for {
     previousColor <- getColor
     previousFont <- getFont
-    _ <- setColor(convertColor(Color.DARK_GRAY))
+    _ <- setColor(GraphicsIO.Color.DarkGray)
     _ <- fillRect(0, 0, sceneUtils.width, sceneUtils.height)
     _ <- paddle.render
     _ <- ball.render
@@ -153,7 +153,7 @@ case class BreakoutScene(
       acc.flatMap(_ => brick.render)
     }
     _ <- setFont(previousFont)
-    _ <- setColor(convertColor(previousColor))
+    _ <- setColor(previousColor)
   } yield ()
 
   def update(delta: Double): Unit = {

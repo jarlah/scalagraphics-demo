@@ -60,18 +60,18 @@ case class SnakeScene(
 
   private val gameOverString = "Game Over"
   private val gameOverFont = new Font("Arial", Font.BOLD, 48)
-  private val gameOverColor = Color.RED
+  private val gameOverColor = GraphicsIO.Color.Red
 
   private val gamePausedString = "Game Paused"
   private val gamePausedFont = new Font("Arial", Font.BOLD, 48)
-  private val gamePausedColor = Color.GREEN
+  private val gamePausedColor = GraphicsIO.Color.Green
 
   private val scoreFont = new Font("Arial", Font.BOLD, 16)
-  private val scoreColor = Color.BLACK
+  private val scoreColor = GraphicsIO.Color.Black
   private var score: Int = 0
 
   private val speedFont = new Font("Arial", Font.BOLD, 16)
-  private val speedColor = Color.BLACK
+  private val speedColor = GraphicsIO.Color.Black
 
   override def update(delta: Double): Unit = {
     if (gameOver) return;
@@ -122,14 +122,14 @@ case class SnakeScene(
     for {
       previousColor <- getColor
       // Clear the screen
-      _ <- setColor(convertColor(Color.DARK_GRAY))
+      _ <- setColor(GraphicsIO.Color.DarkGray)
       _ <- fillRect(0, 0, sceneUtils.width, sceneUtils.height)
       // Conditionally draw game over string
       _ <-
         if (gameOver) {
           for {
             previousFont <- getFont
-            _ <- setColor(convertColor(gameOverColor))
+            _ <- setColor(gameOverColor)
             _ <- setFont(gameOverFont)
             fontMetrics <- getFontMetrics(gameOverFont)
             _ <- {
@@ -148,7 +148,7 @@ case class SnakeScene(
         if (!gameOver && gamePaused) {
           for {
             previousFont <- getFont
-            _ <- setColor(convertColor(gamePausedColor))
+            _ <- setColor(gamePausedColor)
             _ <- setFont(gamePausedFont)
             fontMetrics <- getFontMetrics(gamePausedFont)
             _ <- {
@@ -165,12 +165,12 @@ case class SnakeScene(
         }
       previousFont <- getFont
       // Display the score
-      _ <- setColor(convertColor(scoreColor))
+      _ <- setColor(scoreColor)
       _ <- setFont(scoreFont)
       _ <- drawString(s"Score: $score", 10, 20)
       _ <- setFont(previousFont)
       // Display the speed
-      _ <- setColor(convertColor(speedColor))
+      _ <- setColor(speedColor)
       _ <- setFont(speedFont)
       _ <- drawString(
         f"Speed: ${1000.0 / moveInterval}%.1f px/s",
@@ -180,13 +180,13 @@ case class SnakeScene(
       // Revert the font
       _ <- setFont(previousFont)
       // Draw the snake
-      _ <- setColor(convertColor(Color.GREEN))
+      _ <- setColor(GraphicsIO.Color.Green)
       _ <- snake.points.foldLeft(pure(())) { case (acc, Point(x, y)) =>
         acc.flatMap(_ =>
           fillRect(x * gridSize, y * gridSize, gridSize, gridSize)
         )
       }
-      _ <- setColor(convertColor(Color.RED))
+      _ <- setColor(GraphicsIO.Color.Red)
       // Draw the apple
       _ <- fillRect(
         apple._1 * gridSize,
@@ -195,7 +195,7 @@ case class SnakeScene(
         gridSize
       )
       // Revert the color
-      _ <- setColor(convertColor(previousColor))
+      _ <- setColor(previousColor)
     } yield ()
   }
 

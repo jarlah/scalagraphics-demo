@@ -10,15 +10,6 @@ import scala.util.Try
 val width = 800
 val height = 600
 
-def convertColor(previousColor: Color): GraphicsIO.Color = {
-  new GraphicsIO.Color {
-    override val r: Float = Try(previousColor.getRed).map(_ / 255f).getOrElse(0f)
-    override val g: Float = Try(previousColor.getGreen).map(_ / 255f).getOrElse(0f)
-    override val b: Float = Try(previousColor.getBlue).map(_ / 255f).getOrElse(0f)
-    override val a: Float = Try(previousColor.getAlpha).map(_ / 255f).getOrElse(0f)
-  }
-}
-
 @main
 def main(): Unit = {
   val assetManager = new AssetManager
@@ -46,6 +37,7 @@ def render(frame: JFrame, sceneManager: SceneManager): Ticker => Unit =
     val g = bs.getDrawGraphics
     (for {
       _ <- sceneManager.render
+      _ <- setColor(GraphicsIO.Color.Black)
       _ <- drawString(
         s"FPS: ${ticker.getFps.toString}",
         10,

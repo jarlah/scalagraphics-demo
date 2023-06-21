@@ -60,11 +60,11 @@ case class MenuScene(
     for {
       previousFont <- getFont
       previousColor <- getColor
-      _ <- setColor(convertColor(Color.DARK_GRAY))
+      _ <- setColor(GraphicsIO.Color.DarkGray)
       _ <- fillRect(0, 0, sceneUtils.width, sceneUtils.height)
 
       // Render title
-      _ <- setColor(convertColor(Color.WHITE))
+      _ <- setColor(GraphicsIO.Color.White)
       _ <- setFont(titleFont)
       _ <- drawString("Game Menu", 20, 50)
 
@@ -77,16 +77,16 @@ case class MenuScene(
           val y = 100 + index * 30
           acc.flatMap(_ => {
             if (index == selectedIndex) {
-              setColor(convertColor(Color.YELLOW)).flatMap(_ =>
+              setColor(GraphicsIO.Color.Yellow).flatMap(_ =>
                 drawString(s"> ${option.name}", x, y)
               )
             } else {
-              setColor(convertColor(Color.WHITE)).flatMap(_ => drawString(option.name, x, y))
+              setColor(GraphicsIO.Color.White).flatMap(_ => drawString(option.name, x, y))
             }
           })
       }
 
-      _ <- setColor(convertColor(previousColor))
+      _ <- setColor(previousColor)
       _ <- setFont(previousFont)
     } yield ()
   }
