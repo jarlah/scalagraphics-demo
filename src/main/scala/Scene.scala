@@ -14,7 +14,7 @@ import java.util.{Timer, TimerTask}
 
 trait Scene {
   def update(delta: Double): Unit
-  def render: GraphicsOp[Unit]
+  def render: GraphicsIO[Unit]
   def onResize(newWidth: Int, newHeight: Int): Unit
 
   def onEnter(): Unit
@@ -44,7 +44,7 @@ case class SceneManager(
     if (currentScene != null) currentScene.onEnter()
   }
 
-  def render: GraphicsOp[Unit] = {
+  def render: GraphicsIO[Unit] = {
     currentScene.render
   }
 

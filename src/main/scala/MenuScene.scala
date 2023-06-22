@@ -1,16 +1,6 @@
 package com.github.jarlah.scalagraphics
 
-import GraphicsOp.{
-  clearRect,
-  drawString,
-  fillRect,
-  getColor,
-  getFont,
-  setColor,
-  setFont
-}
-
-import java.awt.{Color, Font}
+import java.awt.{Color as AwtColor, Font as AwtFont}
 import scala.collection.mutable.ArrayBuffer
 
 sealed trait SceneOption {
@@ -29,8 +19,8 @@ case class MenuScene(
     sceneUtils: SceneUtils
 ) extends Scene {
 
-  private val titleFont = new Font("Arial", Font.BOLD, 32)
-  private val optionFont = new Font("Arial", Font.PLAIN, 24)
+  private val titleFont = Font("Arial", 32, FontStyle.unsafeFromInt(java.awt.Font.BOLD))
+  private val optionFont = Font("Arial", 24, FontStyle.unsafeFromInt(java.awt.Font.PLAIN))
 
   private val options: Array[SceneOption] = Array(
     BreakoutSceneOption(scene =
@@ -56,32 +46,32 @@ case class MenuScene(
     }
   }
 
-  override def render: GraphicsOp[Unit] = {
+  override def render: GraphicsIO[Unit] = {
     for {
       previousFont <- getFont
       previousColor <- getColor
-      _ <- setColor(GraphicsIO.Color.DarkGray)
+      _ <- setColor(DarkGray)
       _ <- fillRect(0, 0, sceneUtils.width, sceneUtils.height)
 
       // Render title
-      _ <- setColor(GraphicsIO.Color.White)
+      _ <- setColor(White)
       _ <- setFont(titleFont)
       _ <- drawString("Game Menu", 20, 50)
 
       // Render options
       _ <- setFont(optionFont)
       optionsWithIndex = options.zipWithIndex
-      _ <- optionsWithIndex.foldLeft(GraphicsOp.pure(())) {
+      _ <- optionsWithIndex.foldLeft(pure(())) {
         case (acc, (option, index)) =>
           val x = 50
           val y = 100 + index * 30
           acc.flatMap(_ => {
             if (index == selectedIndex) {
-              setColor(GraphicsIO.Color.Yellow).flatMap(_ =>
+              setColor(Yellow).flatMap(_ =>
                 drawString(s"> ${option.name}", x, y)
               )
             } else {
-              setColor(GraphicsIO.Color.White).flatMap(_ => drawString(option.name, x, y))
+              setColor(White).flatMap(_ => drawString(option.name, x, y))
             }
           })
       }

@@ -1,8 +1,6 @@
 package com.github.jarlah.scalagraphics
 
-import GraphicsOp.*
-
-import java.awt.{Color, Dimension}
+import java.awt.{Dimension, Color as AwtColor}
 import java.util.Timer
 
 object BreakoutScene {
@@ -14,7 +12,7 @@ object BreakoutScene {
   trait RectangularShape extends Position {
     val width: Double
     val height: Double
-    val backgroundColor: GraphicsIO.Color
+    val backgroundColor: Color
     val fill: Boolean = false
 
     def left: Double = x
@@ -28,7 +26,7 @@ object BreakoutScene {
       true
     }
 
-    def render: GraphicsOp[Unit] = {
+    def render: GraphicsIO[Unit] = {
       for {
         previousColor <- getColor
         _ <- setColor(backgroundColor)
@@ -52,7 +50,7 @@ object BreakoutScene {
       width: Double,
       height: Double,
       speed: Double,
-      backgroundColor: GraphicsIO.Color = GraphicsIO.Color.Orange
+      backgroundColor: Color = Orange
   ) extends RectangularShape {
     override val fill: Boolean = true
   }
@@ -65,7 +63,7 @@ object BreakoutScene {
       speedY: Double,
       moving: Boolean,
       started: Boolean = false,
-      backgroundColor: GraphicsIO.Color = GraphicsIO.Color.Red
+      backgroundColor: Color = Red
   ) extends RectangularShape {
     override val width: Double = radius * 2
     override val height: Double = radius * 2
@@ -76,7 +74,7 @@ object BreakoutScene {
     override def top: Double = y - radius
     override def bottom: Double = y + radius
 
-    override def render: GraphicsOp[Unit] = {
+    override def render: GraphicsIO[Unit] = {
       for {
         previousColor <- getColor
         _ <- setColor(backgroundColor)
@@ -97,7 +95,7 @@ object BreakoutScene {
       width: Double,
       height: Double,
       visible: Boolean,
-      backgroundColor: GraphicsIO.Color = GraphicsIO.Color.White
+      backgroundColor: Color = White
   ) extends RectangularShape
 
   case class Wall(
@@ -105,7 +103,7 @@ object BreakoutScene {
       y: Double,
       width: Double,
       height: Double,
-      backgroundColor: GraphicsIO.Color = GraphicsIO.Color.White
+      backgroundColor: Color = White
   ) extends RectangularShape
 }
 
@@ -142,14 +140,14 @@ case class BreakoutScene(
     bricks(i)(j) = bricks(i)(j).copy(x = i * 80, y = j * 20)
   }
 
-  override def render: GraphicsOp[Unit] = for {
+  override def render: GraphicsIO[Unit] = for {
     previousColor <- getColor
     previousFont <- getFont
-    _ <- setColor(GraphicsIO.Color.DarkGray)
+    _ <- setColor(DarkGray)
     _ <- fillRect(0, 0, sceneUtils.width, sceneUtils.height)
     _ <- paddle.render
     _ <- ball.render
-    _ <- bricks.flatten.foldLeft(GraphicsOp.pure(())) { (acc, brick) =>
+    _ <- bricks.flatten.foldLeft(pure(())) { (acc, brick) =>
       acc.flatMap(_ => brick.render)
     }
     _ <- setFont(previousFont)

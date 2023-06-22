@@ -1,19 +1,6 @@
 package com.github.jarlah.scalagraphics
 
-import GraphicsOp.{
-  clearRect,
-  drawRect,
-  drawString,
-  fillRect,
-  getColor,
-  getFont,
-  getFontMetrics,
-  pure,
-  setColor,
-  setFont
-}
-
-import java.awt.{Color, Font, FontMetrics}
+import java.awt.{FontMetrics, Color as AwtColor, Font as AwtFont}
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
@@ -59,19 +46,19 @@ case class SnakeScene(
   private val gridHeight = sceneUtils.height / gridSize
 
   private val gameOverString = "Game Over"
-  private val gameOverFont = new Font("Arial", Font.BOLD, 48)
-  private val gameOverColor = GraphicsIO.Color.Red
+  private val gameOverFont = Font("Arial", 48, FontStyle.unsafeFromInt(java.awt.Font.BOLD))
+  private val gameOverColor = Red
 
   private val gamePausedString = "Game Paused"
-  private val gamePausedFont = new Font("Arial", Font.BOLD, 48)
-  private val gamePausedColor = GraphicsIO.Color.Green
+  private val gamePausedFont = Font("Arial", 48, FontStyle.unsafeFromInt(java.awt.Font.BOLD))
+  private val gamePausedColor = Green
 
-  private val scoreFont = new Font("Arial", Font.BOLD, 16)
-  private val scoreColor = GraphicsIO.Color.Black
+  private val scoreFont = Font("Arial", 16, FontStyle.unsafeFromInt(java.awt.Font.BOLD))
+  private val scoreColor = Black
   private var score: Int = 0
 
-  private val speedFont = new Font("Arial", Font.BOLD, 16)
-  private val speedColor = GraphicsIO.Color.Black
+  private val speedFont = Font("Arial", 16, FontStyle.unsafeFromInt(java.awt.Font.BOLD))
+  private val speedColor = Black
 
   override def update(delta: Double): Unit = {
     if (gameOver) return;
@@ -118,11 +105,11 @@ case class SnakeScene(
   }
 
   // Render the game scene
-  override def render: GraphicsOp[Unit] = {
+  override def render: GraphicsIO[Unit] = {
     for {
       previousColor <- getColor
       // Clear the screen
-      _ <- setColor(GraphicsIO.Color.DarkGray)
+      _ <- setColor(DarkGray)
       _ <- fillRect(0, 0, sceneUtils.width, sceneUtils.height)
       // Conditionally draw game over string
       _ <-
@@ -131,14 +118,7 @@ case class SnakeScene(
             previousFont <- getFont
             _ <- setColor(gameOverColor)
             _ <- setFont(gameOverFont)
-            fontMetrics <- getFontMetrics(gameOverFont)
-            _ <- {
-              val stringWidth: Int = fontMetrics.stringWidth(gameOverString)
-              val stringHeight: Int = fontMetrics.getHeight
-              val x: Int = (sceneUtils.width - stringWidth) / 2
-              val y: Int = (sceneUtils.height - stringHeight) / 2
-              drawString(gameOverString, x, y)
-            }
+            _ <- drawString(gameOverString, sceneUtils.width / 2, sceneUtils.height / 2)
             _ <- setFont(previousFont)
           } yield ()
         } else {
@@ -146,18 +126,12 @@ case class SnakeScene(
         }
       _ <-
         if (!gameOver && gamePaused) {
+          drawLine(0, 0, sceneUtils.width, sceneUtils.height)
           for {
             previousFont <- getFont
             _ <- setColor(gamePausedColor)
             _ <- setFont(gamePausedFont)
-            fontMetrics <- getFontMetrics(gamePausedFont)
-            _ <- {
-              val stringWidth: Int = fontMetrics.stringWidth(gamePausedString)
-              val stringHeight: Int = fontMetrics.getHeight
-              val x: Int = (sceneUtils.width - stringWidth) / 2
-              val y: Int = (sceneUtils.height - stringHeight) / 2
-              drawString(gamePausedString, x, y)
-            }
+            _ <- drawString(gamePausedString, sceneUtils.width / 2, sceneUtils.height / 2)
             _ <- setFont(previousFont)
           } yield ()
         } else {
@@ -180,13 +154,13 @@ case class SnakeScene(
       // Revert the font
       _ <- setFont(previousFont)
       // Draw the snake
-      _ <- setColor(GraphicsIO.Color.Green)
+      _ <- setColor(Green)
       _ <- snake.points.foldLeft(pure(())) { case (acc, Point(x, y)) =>
         acc.flatMap(_ =>
           fillRect(x * gridSize, y * gridSize, gridSize, gridSize)
         )
       }
-      _ <- setColor(GraphicsIO.Color.Red)
+      _ <- setColor(Red)
       // Draw the apple
       _ <- fillRect(
         apple._1 * gridSize,

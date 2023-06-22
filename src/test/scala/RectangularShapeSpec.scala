@@ -15,7 +15,7 @@ class RectangularShapeSpec extends AnyFlatSpec with Matchers {
       val y = 0.0
       val width = 5.0
       val height = 5.0
-      val backgroundColor = GraphicsIO.Color.Red
+      val backgroundColor = Red
     }
 
     val shape2 = new RectangularShape {
@@ -23,7 +23,7 @@ class RectangularShapeSpec extends AnyFlatSpec with Matchers {
       val y = 4.0
       val width = 5.0
       val height = 5.0
-      val backgroundColor = GraphicsIO.Color.Red
+      val backgroundColor = Red
     }
 
     shape1.intersects(shape2) should be(true)
@@ -36,7 +36,7 @@ class RectangularShapeSpec extends AnyFlatSpec with Matchers {
       val y = 0.0
       val width = 5.0
       val height = 5.0
-      val backgroundColor = GraphicsIO.Color.Red
+      val backgroundColor = Red
     }
 
     val shape2 = new RectangularShape {
@@ -44,7 +44,7 @@ class RectangularShapeSpec extends AnyFlatSpec with Matchers {
       val y = 6.0
       val width = 5.0
       val height = 5.0
-      val backgroundColor = GraphicsIO.Color.Red
+      val backgroundColor = Red
     }
 
     shape1.intersects(shape2) should be(false)

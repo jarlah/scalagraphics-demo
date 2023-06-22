@@ -131,7 +131,7 @@ class BreakoutSceneSpec extends AnyFunSuite {
     when(graphicsMock.getColor).thenReturn(java.awt.Color.YELLOW)
 
     // Call render method
-    assert(scene.render.run(graphicsWrapper).isRight)
+    graphicsWrapper.run(scene.render)
 
     // Verify that drawOval was called with the correct parameters
     verify(graphicsMock, times(1)).fillOval(90, 90, 20, 20)

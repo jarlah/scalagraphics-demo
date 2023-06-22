@@ -1,7 +1,5 @@
 package com.github.jarlah.scalagraphics
 
-import GraphicsOp.*
-
 import java.awt.event.{ComponentAdapter, ComponentEvent, ComponentListener, KeyListener}
 import java.awt.{Color, Dimension, Graphics2D, Image}
 import javax.swing.{ImageIcon, JFrame, WindowConstants}
@@ -35,15 +33,16 @@ def render(frame: JFrame, sceneManager: SceneManager): Ticker => Unit =
   ticker => {
     val bs = frame.getBufferStrategy
     val g = bs.getDrawGraphics
-    (for {
+    val engine = Java2DGraphicsIO(g)
+    engine.run(for {
       _ <- sceneManager.render
-      _ <- setColor(GraphicsIO.Color.Black)
+      _ <- setColor(Black)
       _ <- drawString(
         s"FPS: ${ticker.getFps.toString}",
         10,
         sceneManager.height - 10
       )
-    } yield ()).run(Java2DGraphicsIO(g))
+    } yield ())
     g.dispose()
     bs.show()
   }
