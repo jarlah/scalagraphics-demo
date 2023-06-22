@@ -33,8 +33,7 @@ def render(frame: JFrame, sceneManager: SceneManager): Ticker => Unit =
   ticker => {
     val bs = frame.getBufferStrategy
     val g = bs.getDrawGraphics
-    val engine = Java2DGraphicsIO(g)
-    engine.run(for {
+    Java2DGraphics(g).run(for {
       _ <- sceneManager.render
       _ <- setColor(Black)
       _ <- drawString(

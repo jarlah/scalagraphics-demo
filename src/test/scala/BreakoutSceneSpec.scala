@@ -127,7 +127,7 @@ class BreakoutSceneSpec extends AnyFunSuite {
     scene.ball = scene.ball.copy(x = 100, y = 100, radius = 10)
 
     // Create wrapper around the mock graphics object
-    val graphicsWrapper = new Java2DGraphicsIO(graphicsMock)
+    val graphicsWrapper = new Java2DGraphics(graphicsMock)
     when(graphicsMock.getColor).thenReturn(java.awt.Color.YELLOW)
 
     // Call render method
