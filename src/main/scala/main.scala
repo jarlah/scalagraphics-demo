@@ -4,6 +4,7 @@ import java.awt.event.{ComponentAdapter, ComponentEvent, ComponentListener, KeyL
 import java.awt.{Color, Dimension, Graphics2D, Image}
 import javax.swing.{ImageIcon, JFrame, WindowConstants}
 import scala.util.Try
+import GraphicsIO.*
 
 val width = 800
 val height = 600

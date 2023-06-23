@@ -4,6 +4,7 @@ import java.awt.{FontMetrics, Color as AwtColor, Font as AwtFont}
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
+import GraphicsIO.*
 
 case class Point(x: Int, y: Int)
 

@@ -2,6 +2,7 @@ package com.github.jarlah.scalagraphics
 
 import java.awt.{Color as AwtColor, Font as AwtFont}
 import scala.collection.mutable.ArrayBuffer
+import GraphicsIO.*
 
 sealed trait SceneOption {
   def name: String

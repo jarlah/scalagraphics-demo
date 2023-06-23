@@ -11,5 +11,5 @@ lazy val root = (project in file("."))
     libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.16",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % "test",
     libraryDependencies += "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % "test",
-    libraryDependencies += "com.github.jarlah.scalagraphics" % "scalagraphics_3" % "0.3.7-SNAPSHOT"
+    libraryDependencies += "com.github.jarlah.scalagraphics" % "scalagraphics_3" % "0.3.10-SNAPSHOT"
   )

@@ -2,6 +2,7 @@ package com.github.jarlah.scalagraphics
 
 import java.awt.{Dimension, Color as AwtColor}
 import java.util.Timer
+import GraphicsIO.*
 
 object BreakoutScene {
   trait Position {
